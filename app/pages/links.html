@@ -1,0 +1,41 @@
+<?codeBehind class="\Controller\Links" ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?include
+		page="partials/head.html"
+		title="All links"
+	?>
+</head>
+<body>
+	<div class="container">
+		<h4>Add a new link</h4>
+		<form name="generate" method="post" action="#">
+			<input class="input" placeholder="Enter your url..." type="text" name="url"/>
+			<div class="centering">
+				<button class="button" type="submit">Add new link</button>
+			</div>
+			<div id="error" hidden class="error">
+				The url cannot be empty.
+			</div>
+			<div id="error2" hidden class="error">
+				A valid url is needed.
+			</div>
+		</form>
+		<h4>Your links</h4>
+		<p>With this link you can have an overview of all your links.</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Link</th>
+					<th>Counter</th>
+					<th style="width: 150px">Creation date</th>
+				</tr>
+			</thead>
+			<tbody id="links"></tbody>
+		</table>
+		<div class="line"></div>
+		<p class="footer">2021 (c) hendrikweiler.com</p>
+	</div>
+</body>
+</html>
