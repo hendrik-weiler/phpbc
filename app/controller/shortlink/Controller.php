@@ -1,12 +1,12 @@
 <?php
 
-namespace Controller;
+namespace Controller\shortlink;
 
 use renderer\CodeBehind;
 
 class Controller extends CodeBehind
 {
-	protected $sqliteDBPath = APP_PATH . 'db.sqlite';
+	protected $sqliteDBPath = APP_PATH . 'shortlink.sqlite';
 
 	private $db;
 

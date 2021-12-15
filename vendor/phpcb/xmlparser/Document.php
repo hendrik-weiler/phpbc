@@ -142,7 +142,8 @@ class Document
 			}
 		}
 		if( ($tagName == 'input'
-			|| $tagName == 'select') && !empty($this->forms) ) {
+			|| $tagName == 'select'
+			|| $tagName == 'textarea') && !empty($this->forms) ) {
 			while ($formNode = $node->parentNode) {
 
 				if(is_null($formNode)) {

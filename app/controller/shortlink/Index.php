@@ -1,6 +1,6 @@
 <?php
 
-namespace Controller;
+namespace Controller\shortlink;
 
 class Index extends Controller
 {
@@ -26,7 +26,7 @@ class Index extends Controller
 
 				$url = $this->escapeString($this->form_generate_url->getValue());
 				$this->execDB('INSERT INTO link VALUES (null,' . $linkGroup_id . ',"' . uniqid() . '","' . $url . '",0,' . time() . ')');
-				$response->redirect('/links/' . $linkGroupUid);
+				$response->redirect('/shortlink/links/' . $linkGroupUid);
 			} else {
 				$error = $renderer->document->getElementById('error2');
 				$error->removeAttribute('hidden');

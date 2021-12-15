@@ -6,6 +6,8 @@ require_once RENDERER_PATH . './cssparser/Document.php';
 require_once RENDERER_PATH . './xmlparser/Document.php';
 require_once RENDERER_PATH . './renderer/Request.php';
 require_once RENDERER_PATH . './renderer/Response.php';
+require_once RENDERER_PATH . './renderer/AjaxResponse.php';
+require_once RENDERER_PATH . './renderer/AjaxRequest.php';
 require_once RENDERER_PATH . './renderer/CodeBehind.php';
 
 require_once RENDERER_PATH . './renderer/form/Input.php';
@@ -23,6 +25,8 @@ class Renderer
 	private $componentInstances = array();
 
 	public $codeBehind = null;
+
+	protected $injectHTMLCallback = null;
 
 	public function __construct($text)
 	{
@@ -101,8 +105,13 @@ class Renderer
 		}
 	}
 
+	public function injectHTML(callable $func) {
+		$this->injectHTMLCallback = $func;
+	}
+
 	public function render() {
 		$rootNode = $this->document->parse();
+		call_user_func($this->injectHTMLCallback, $this->document);
 		$this->checkDeclarations();
 		$this->initComponents();
 		if($this->codeBehind) {
@@ -113,7 +122,8 @@ class Renderer
 				foreach ($form as $inputName => $inputElm) {
 					$property = 'form_' . $formName . '_' . $inputName;
 					if(property_exists($this->codeBehind, $property)) {
-						if($inputElm->name == 'input') {
+						if($inputElm->name == 'input'
+							|| $inputElm->name == 'textarea') {
 							$this->codeBehind->{$property} = new \Input($inputElm, $this, $request);
 						}
 					}
@@ -131,7 +141,36 @@ class Renderer
 				}
 			}
 			if($_SERVER['REQUEST_METHOD'] === 'POST') {
-				$this->codeBehind->post_execute($this,$request,$response);
+				if(isset($_GET['ajaxCall']) && $_GET['ajaxCall']==1) {
+					$inputJSON = file_get_contents('php://input');
+					try {
+						$inputJSON = json_decode($inputJSON,true);
+						if(!isset($inputJSON['method'])) {
+							print 'invalid call';
+						} else {
+							if(method_exists($this->codeBehind,$inputJSON['method'])) {
+								$request = new \AjaxRequest();
+								$request->fillValues($inputJSON['params']);
+								$response = new \AjaxResponse($inputJSON['method']);
+								$result = call_user_func_array(array($this->codeBehind, $inputJSON['method']), array($this, $request, $response));
+								if($result instanceof \AjaxResponse) {
+									print $result;
+								} else {
+									$response->setContent($result);
+									print $response;
+								}
+								exit();
+							} else {
+								throw new \Exception('Could not call method "' . $inputJSON['method'] . '" in code behind class.');
+							}
+						}
+					} catch (\Exception $e) {
+						print $e->getMessage();
+						exit();
+					}
+				} else {
+					$this->codeBehind->post_execute($this,$request,$response);
+				}
 			} else if($_SERVER['REQUEST_METHOD'] === 'GET') {
 				$this->codeBehind->get_execute($this,$request,$response);
 			}

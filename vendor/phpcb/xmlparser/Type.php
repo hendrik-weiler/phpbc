@@ -2,6 +2,12 @@
 
 namespace xmlparser;
 
+/**
+ * The type class
+ *
+ * @author Hendrik Weiler
+ * @version 1.0
+ */
 class Type
 {
 	const DOCTYPE_START = 'DOCTYPE_START';

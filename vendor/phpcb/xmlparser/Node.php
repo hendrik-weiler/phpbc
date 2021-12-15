@@ -127,8 +127,13 @@ class Node
 		}
 		switch ($name) {
 			case 'click':
-				$this->setAttribute('onclick','javascript:location.href="?__execute__=' .
-					$funcName . '&' . implode('&', $attributes) . '&redir="+location.href');
+				if($this->name == 'a') {
+					$this->attributes['href'] = '{request_url}';
+				}
+				$this->setAttribute('onclick',"javascript:event.preventDefault();__clickCall('" . $funcName . "','{request_url}', this);return false");
+				break;
+			case 'ajax':
+				$this->setAttribute('onclick',"javascript:event.preventDefault();__ajaxCall('" . $funcName . "','{request_url}', this);return false;");
 				break;
 		}
 	}
@@ -248,7 +253,9 @@ class Node
 			$result .= ' ';
 		}
 		$result .= $this->generateAttributes();
-		if(count($this->children) == 0 && strlen($this->content) == 0 && $this->name != 'script') {
+		if(count($this->children) == 0 && strlen($this->content) == 0
+			&& $this->name != 'script'
+			&& $this->name != 'textarea') {
 			$result .= ' />'. PHP_EOL;
 		} else {
 			$result .= '>';

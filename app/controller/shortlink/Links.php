@@ -1,6 +1,6 @@
 <?php
 
-namespace Controller;
+namespace Controller\shortlink;
 
 class Links extends Controller
 {
@@ -16,7 +16,7 @@ class Links extends Controller
 		$linksContainer = $renderer->document->getElementById('links');
 		$this->initDB();
 
-		$uid = $request->getUrlSegment(2);
+		$uid = $request->getUrlSegment(3);
 
 		if(empty($uid)) {
 			$this->invalid();
@@ -27,7 +27,7 @@ class Links extends Controller
 		while($row = $result->fetchArray(SQLITE3_ASSOC))
 		{
 			$counter++;
-			$link = HOST . 'r/' . $row['uid'];
+			$link = HOST . 'shortlink/r/' . $row['uid'];
 			$node = $renderer->document->createFromHTML('
 				<tr>
 					<td><a class="shortlink" target="_blank" href="' . $link .'">'.$link.'</a> => <a class="reallink" target="_blank" href="' . $row['link'] .'">'.$row['link'].'</a></td>
@@ -53,13 +53,13 @@ class Links extends Controller
 			if (filter_var($this->form_generate_url->getValue(), FILTER_VALIDATE_URL) !== false) {
 				$this->initDB();
 
-				$uid = $request->getUrlSegment(2);
+				$uid = $request->getUrlSegment(3);
 				$result = $this->queryDB('SELECT id FROM linkGroup WHERE uid = "' . $this->escapeString($uid) . '"');
 				$row = $result->fetchArray(SQLITE3_ASSOC);
 				if(count($row) == 1) {
 					$url = $this->escapeString($this->form_generate_url->getValue());
 					$this->execDB('INSERT INTO link VALUES (null,' . $row['id'] . ',"' . uniqid() . '","' . $url  . '",0,' . time() . ')');
-					$response->redirect('/links/' . $uid);
+					$response->redirect('/shortlink/links/' . $uid);
 				} else {
 
 				}

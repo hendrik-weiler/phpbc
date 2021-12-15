@@ -5,24 +5,84 @@ namespace xmlparser;
 require_once 'Node.php';
 require_once 'Comment.php';
 
+/**
+ * Parses tokens from the lexer
+ *
+ * @author Hendrik Weiler
+ * @version 1.0
+ */
 class Parser
 {
+	/**
+	 * Returns the current token
+	 *
+	 * @var $current_token
+	 * @type Token|null
+	 */
 	public $current_token = null;
 
+	/**
+	 * Returns the lexer instance
+	 *
+	 * @var $lexer
+	 * @type Lexer
+	 */
 	public $lexer;
 
+	/**
+	 * Returns the document instance
+	 *
+	 * @var $document
+	 * @type Document
+	 */
 	private $document;
 
+	/**
+	 * Returns if a root tag already exist
+	 *
+	 * @var $gotRootTag
+	 * @type bool
+	 */
 	private $gotRootTag = false;
 
+	/**
+	 * Returns a list of delcarations
+	 *
+	 * @var $declarations
+	 * @type array
+	 */
 	public $declarations = array();
 
+	/**
+	 * Returns a list of doctypes
+	 *
+	 * @var $doctypes
+	 * @type array
+	 */
 	public $doctypes = array();
 
+	/**
+	 * Returns a node tree
+	 *
+	 * @var $nodes
+	 * @type array
+	 */
 	public $nodes = array();
 
+	/**
+	 * Returns a callable object for the call_user_func function
+	 *
+	 * @var $declarationCallbable
+	 * @type callable
+	 */
 	public $declarationCallbable;
 
+	/**
+	 * The constructor
+	 *
+	 * @param Lexer $lexer The lexer instance
+	 * @param Document $document The document instance
+	 */
 	public function __construct($lexer, $document)
 	{
 		$this->lexer = $lexer;
@@ -30,14 +90,31 @@ class Parser
 		$this->current_token = $this->lexer->get_next_token();
 	}
 
+	/**
+	 * Wrapper function for the lexer error function
+	 *
+	 * @param string $msg The error message
+	 * @throws \Exception
+	 */
 	public function error($msg='') {
 		$this->lexer->error($msg);
 	}
 
+	/**
+	 * Sets the on declaration event
+	 *
+	 * @param callable $func A callable
+	 */
 	public function setOnDeclaration(callable $func) {
 		$this->declarationCallbable = $func;
 	}
 
+	/**
+	 * Consumes the type and goes to the next token
+	 *
+	 * @param Type $type The type to eat
+	 * @throws \Exception
+	 */
 	public function eat($type) {
 		if($this->current_token->type == $type) {
 			$this->current_token = $this->lexer->get_next_token();
@@ -46,9 +123,15 @@ class Parser
 		}
 	}
 
+	/**
+	 * Checks for a well formed attribute sequence and returns it
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
 	public function attribute() {
 		$key = $this->current_token->value;
-		$value = $key;
+		$value = '';
 		$this->eat(Type::ID);
 		if($this->current_token->type == Type::EQUAL) {
 			$this->eat(Type::EQUAL);
@@ -78,6 +161,11 @@ class Parser
 		);
 	}
 
+	/**
+	 * Checks for a well formed delcaration
+	 *
+	 * @throws \Exception
+	 */
 	public function declaration() {
 
 		$name = $this->current_token->value;
@@ -103,6 +191,13 @@ class Parser
 
 	}
 
+	/**
+	 * Checks for a well formed node and adds it to its children
+	 *
+	 * @param array $children A list of children nodes
+	 * @param Node $parent The parent node
+	 * @throws \Exception
+	 */
 	public function node(&$children, $parent) {
 		$this->eat(Type::TAG_START);
 		$tagName = $this->current_token->value;
@@ -160,6 +255,12 @@ class Parser
 		}
 	}
 
+	/**
+	 * Parse the data attributes for doctype declaration
+	 *
+	 * @return array|void
+	 * @throws \Exception
+	 */
 	public function doctype_data() {
 		if($this->current_token->type == Type::QUOTE) {
 			$this->eat(Type::QUOTE);
@@ -179,6 +280,11 @@ class Parser
 		}
 	}
 
+	/**
+	 * Parse a doctype delaration
+	 *
+	 * @throws \Exception
+	 */
 	public function doctypes() {
 
 		$name = $this->current_token->value;
@@ -199,6 +305,11 @@ class Parser
 		}
 	}
 
+	/**
+	 * The main parse method
+	 *
+	 * @throws \Exception
+	 */
 	public function parse() {
 
 		while (in_array($this->current_token->type, array(

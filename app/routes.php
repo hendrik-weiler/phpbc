@@ -1,6 +1,7 @@
 <?php
 
 $routes = array(
-	'/r/[a-zA-Z0-9]+' => ':\Controller\Redir',
-	'/links/[a-zA-Z0-9]+' => 'links.html'
+	// shortlink generator
+	'/shortlink/r/[a-zA-Z0-9]+' => ':\Controller\shortlink\Redir',
+	'/shortlink/links/[a-zA-Z0-9]+' => 'shortlink/links.html'
 );

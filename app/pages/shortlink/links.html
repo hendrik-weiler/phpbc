@@ -1,16 +1,16 @@
-<?codeBehind class="\Controller\Links" ?>
+<?codeBehind class="\Controller\shortlink\Links" ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<?include
-		page="partials/head.html"
+		page="shortlink/partials/head.html"
 		title="All links"
 	?>
 </head>
 <body>
 	<div class="container">
 		<h4>Add a new link</h4>
-		<form name="generate" method="post" action="#">
+		<form name="generate" method="post" action="{request_url}">
 			<input class="input" placeholder="Enter your url..." type="text" name="url"/>
 			<div class="centering">
 				<button class="button" type="submit">Add new link</button>

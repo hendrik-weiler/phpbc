@@ -1,0 +1,33 @@
+<?codeBehind class="\Controller\twitter\Index" ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?include
+		page="twitter/partials/head.html"
+		title="Twitter clone"
+	?>
+</head>
+<body class="center">
+<div class="container">
+	<div style="text-align: center">
+		<img width="100px" src="/@/twitter/logo.svg"/><br/>
+		<strong>Twitter clone</strong>
+	</div>
+	<form method="post" name="login" action="{request_url}">
+		<label for="username">Username</label>
+		<input id="username" name="username" type="text" />
+		<label for="password">Password</label>
+		<input id="password" name="password" type="password"/>
+		<br/><br/>
+		<button class="button" type="submit" name="submit">Login</button>
+		<div id="error" hidden class="error">
+			The username or password is wrong.
+		</div>
+		<div class="line"></div>
+		<div class="centering">
+			<a href="register.html">Dont have an account? Register now</a>
+		</div>
+	</form>
+</div>
+</body>
+</html>

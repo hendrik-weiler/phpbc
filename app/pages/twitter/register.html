@@ -1,0 +1,42 @@
+<?codeBehind class="\Controller\twitter\Register" ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <?include
+		page="twitter/partials/head.html"
+		title="Twitter clone - Register"
+	?>
+</head>
+<body class="center">
+<div class="container">
+	<div style="text-align: center">
+		<img width="100px" src="/@/twitter/logo.svg"/><br/>
+		<strong>Twitter clone</strong>
+	</div>
+	<p><strong>To register fill out this form and press "register"</strong></p>
+	<form method="post" name="register" action="{request_url}">
+		<label for="username">Username</label>
+		<input id="username" name="username" type="text" value="{form:username}" />
+		<label for="password">Password</label>
+		<input id="password" name="password" type="password"/>
+		<label for="repeat_password">Repeat password</label>
+		<input id="repeat_password" name="repeat_password" type="password"/>
+		<br/><br/>
+		<button class="button" type="submit" name="submit">Register</button>
+		<a class="button" href="/twitter/">Back</a>
+		<div id="error" hidden class="error">
+			The passwords needs to be the same.
+		</div>
+		<div id="error2" hidden class="error">
+			The username already exists.
+		</div>
+		<div id="error3" hidden class="error">
+			The username cant be empty.
+		</div>
+		<div id="error4" hidden class="error">
+			The passwords cant be empty.
+		</div>
+	</form>
+</div>
+</body>
+</html>

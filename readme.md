@@ -1,7 +1,7 @@
 # phpcb
 
 Let pages have a code behind class. <br>
-A shortlink generator example is included.
+A shortlink generator and twitter example is included.
 
 Version: preview
 
@@ -11,6 +11,7 @@ Version: preview
 - xml parser
 - renderer
 - shortlink generator example
+- simple twitter clone example
 
 #### css parser
 
@@ -53,7 +54,23 @@ The method "test" will be called in the code behind class.
 
 Signature:<br>
 ```
-bool test($renderer, $request, $response);
+bool test($renderer,Request $request,Response $response);
 ```
 If you ```return false``` in the method theres no redirection back to
 the page.
+
+You can add ajax events on nodes
+
+Example:
+```
+$retweet = $renderer->document->getElementById('retweet' . $row['id']);
+$retweet->addEventListener('ajax','retweet');
+// ajax usage in the twitter example
+```
+
+The method "retweet" will be called in the code behind class.
+
+Signature:<br>
+```
+mixed retweet($renderer,AjaxRequest $request,AjaxResponse $response);
+```

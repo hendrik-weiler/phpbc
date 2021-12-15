@@ -1,4 +1,5 @@
 
 .DS_Store
-/app/db.sqlite
+/app/shortlink.sqlite
+/app/twitter.sqlite
 .idea

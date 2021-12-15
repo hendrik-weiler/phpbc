@@ -1,0 +1,49 @@
+<?codeBehind class="\Controller\twitter\App" ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<?include
+		page="twitter/partials/head.html"
+		title="Twitter clone - App"
+	?>
+	<script>
+		function ajax_like(data) {
+            let likeElm = document.getElementById('like'+data.post_id),
+				span = likeElm.querySelector('span');
+            if(likeElm.classList.contains('active')) {
+                likeElm.classList.remove('active');
+			} else {
+                likeElm.classList.add('active');
+			}
+            span.innerText = data.count;
+		}
+        function ajax_retweet(data) {
+            if(data) {
+                location.reload();
+			}
+        }
+        function createPost(e) {
+			if(document.forms.app.text.value.length == 0) {
+                e.preventDefault();
+                alert('The tweet needs to have atleast one character');
+			}
+		}
+	</script>
+</head>
+<body>
+<div class="app">
+	<div class="post-create-container">
+		<div style="display: flex; justify-content: space-between;">
+			<h4>Startsite - signed on as <span id="username"></span></h4>
+			<a id="logout" href="#">Logout</a>
+		</div>
+		<form onsubmit="createPost(event)" name="app" action="{request_url}" method="post">
+			<textarea placeholder="Type in your message..." name="text" cols="30" rows="10"></textarea>
+			<button class="button" type="submit">Create post</button>
+			<br/><br/>
+		</form>
+	</div>
+	<div id="posts" class="post-container"></div>
+</div>
+</body>
+</html>

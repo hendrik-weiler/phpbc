@@ -1,0 +1,175 @@
+:root {
+    --lightgray : #efefef;
+    --middlegray : #cecece;
+    --primary : #ffa862;
+    --primary-hover: #ffd0a8;
+    --error: #ff7f7f;
+    --darkgray: #555;
+    --success: #d4e87c;
+}
+
+body.center {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+
+}
+
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.line {
+    border-top: 1px solid var(--middlegray);
+    margin: 10px 0;
+}
+
+#logout {
+    padding-top: 5px;
+}
+
+input {
+    width: 100%;
+    border: 1px solid var(--darkgray);
+    padding: 10px;
+}
+
+.button {
+    border: 1px solid var(--darkgray);
+    background: var(--darkgray);
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+a.button {
+    text-decoration: none;
+    font-size: 13px;
+}
+
+label {
+    display: block;
+    margin: 10px 0;
+}
+
+.button:hover {
+    background: var(--middlegray);
+    color: var(--darkgray);
+}
+
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+.container {
+    border: 1px solid var(--middlegray);
+    background: var(--lightgray);
+    border-radius: 5px;
+    padding: 20px;
+    width: 700px;
+}
+
+.footer {
+    font-size: 12px;
+    text-align: center;
+}
+
+.centering {
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.error {
+    background: var(--error);
+    padding: 5px;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.app {
+    border-left: 1px solid var(--middlegray);
+    border-right: 1px solid var(--middlegray);
+    width: 1024px;
+    margin: auto;
+    height: 100vh;
+    overflow: auto;
+}
+
+.post-create-container {
+    border-bottom: 1px solid var(--middlegray);
+    margin-bottom: 25px;
+    padding: 0 10px;
+}
+
+.post-create-container textarea {
+    border: none;
+    font-size: 14px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 0;
+}
+
+.post-create-container h4 {
+    margin-top: 0;
+    padding-top: 10px;
+}
+
+.tweet-container {
+    border-bottom: 1px solid var(--darkgray);
+}
+
+.tweet-container .tweet-head {
+    border-bottom: 1px solid var(--lightgray);
+    padding: 10px;
+}
+
+.tweet-container .tweet-head i {
+    color: var(--middlegray);
+    font-size: 12px;
+}
+
+.tweet-container .tweet-body {
+    padding: 10px;
+}
+
+.tweet-container .tweet-stats {
+    padding: 10px;
+}
+
+.tweet-container .tweet-stats a {
+    display: inline-block;
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+}
+
+.tweet-container .tweet-stats a * {
+    vertical-align: middle;
+}
+
+.tweet-container .tweet-stats a.active {
+    background: var(--success);
+}
+
+.tweet-container .tweet-stats a.not-allowed {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.tweet-retweet {
+    border: 1px solid var(--middlegray);
+}
+
