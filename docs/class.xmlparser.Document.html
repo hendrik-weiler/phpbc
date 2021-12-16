@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Documentation</title>
+    <meta charset="utf-8">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script src="search.data.js"></script>
+</head>
+<body>
+    <template id="searchEntry">
+        <a href="$link" class="searchResult">
+            <h4>$name</h4>
+            <p>$description</p>
+        </a>
+    </template>
+    <div class="container">
+        <div class="header">
+            <div class="col1">
+                <h1>phpcb Documentation vpreview</h1>
+            </div>
+            <div class="col2">
+                <input id="search" type="search" placeholder="Search for classes, properties, methods and pages...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="search-results"></div>
+            <div class="content-inner">
+                <div class="breadcrumb-nav"><a href="index.html">Main</a> \ <a href="namespace.xmlparser.html">xmlparser</a> \ Document</div><p class="description">
+    Creates a document from input        </p>
+<h4>
+    <span class="class-attr">public class</span>
+    <span class="class-name">Document</span>
+    </h4>
+<table>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            <a href="class.xmlparser.Parser.html">Parser</a>
+                                    </span>
+                $parser                    </td>
+        <td>Returns the parser instance</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            <a href="class.xmlparser.Lexer.html">Lexer</a>
+                                    </span>
+                $lexer                    </td>
+        <td>Returns the lexer instance</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">public                                            <a href="class.xmlparser.Node.html">Node</a>
+                                    </span>
+                $rootNode                    </td>
+        <td>Returns the root node of the document</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            array                                    </span>
+                $declarations                    </td>
+        <td>Returns a list of declarations</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            array                                    </span>
+                $doctypes                    </td>
+        <td>Returns a list of doctypes</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            array                                    </span>
+                $ids                    </td>
+        <td>Returns a id,node map</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            array                                    </span>
+                $tags                    </td>
+        <td>Returns a map of tagName,Node[]</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            array                                    </span>
+                $forms                    </td>
+        <td>Returns a map of formName,array</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.__construct.html">
+                __construct            </a>
+        </td>
+        <td>...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.createFromHTML.html">
+                createFromHTML            </a>
+        </td>
+        <td>Creates nodes from a html string and returns it...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.declarationCall.html">
+                declarationCall            </a>
+        </td>
+        <td>Gets called when a declaration is in the text...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.printTokens.html">
+                printTokens            </a>
+        </td>
+        <td>Prints all tokens from the lexer...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.indexNodes.html">
+                indexNodes            </a>
+        </td>
+        <td>Indexes from a node...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.reIndexNodes.html">
+                reIndexNodes            </a>
+        </td>
+        <td>Reindex all nodes...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.getElementsByTagName.html">
+                getElementsByTagName            </a>
+        </td>
+        <td>Gets node elements by tag name...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.getElementById.html">
+                getElementById            </a>
+        </td>
+        <td>Get a single element from an id...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.createElement.html">
+                createElement            </a>
+        </td>
+        <td>Creates an element and returns it...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.getDoctypes.html">
+                getDoctypes            </a>
+        </td>
+        <td>Gets the doctype definitions...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.getDeclarations.html">
+                getDeclarations            </a>
+        </td>
+        <td>Gets the declarations...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.getForms.html">
+                getForms            </a>
+        </td>
+        <td>Gets the forms of the document...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.getTags.html">
+                getTags            </a>
+        </td>
+        <td>Gets the tags...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.generateDoctype.html">
+                generateDoctype            </a>
+        </td>
+        <td>Generates a string from a doctype definition...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Document.parse.html">
+                parse            </a>
+        </td>
+        <td>Parses the document...</td>
+    </tr>
+    </table>            </div>
+        </div>
+        <div class="footer">
+           2021 © Hendrik Weiler | 2021/16/12 11:07:05        </div>
+    </div>
+</body>
+</html>

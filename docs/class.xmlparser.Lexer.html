@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Documentation</title>
+    <meta charset="utf-8">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script src="search.data.js"></script>
+</head>
+<body>
+    <template id="searchEntry">
+        <a href="$link" class="searchResult">
+            <h4>$name</h4>
+            <p>$description</p>
+        </a>
+    </template>
+    <div class="container">
+        <div class="header">
+            <div class="col1">
+                <h1>phpcb Documentation vpreview</h1>
+            </div>
+            <div class="col2">
+                <input id="search" type="search" placeholder="Search for classes, properties, methods and pages...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="search-results"></div>
+            <div class="content-inner">
+                <div class="breadcrumb-nav"><a href="index.html">Main</a> \ <a href="namespace.xmlparser.html">xmlparser</a> \ Lexer</div><p class="description">
+    This tokenizes a given string        </p>
+<h4>
+    <span class="class-attr">public class</span>
+    <span class="class-name">Lexer</span>
+    </h4>
+<table>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            int                                    </span>
+                $pos                    </td>
+        <td>Returns the current position</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            int                                    </span>
+                $line                    </td>
+        <td>Returns the line number</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            int                                    </span>
+                $linePos                    </td>
+        <td>Returns the line position</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            string                                    </span>
+                $text                    </td>
+        <td>Returns the text</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            string                                    </span>
+                $current_char                    </td>
+        <td>Returns the current char</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            bool                                    </span>
+                $afterTagEnd                    </td>
+        <td>Returns if the current pos is after the end tag</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            bool                                    </span>
+                $commentStart                    </td>
+        <td>Returns if the comment starts</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            bool                                    </span>
+                $inTag                    </td>
+        <td>Returns if the position is in tag</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            bool                                    </span>
+                $inSingleQuotes                    </td>
+        <td>Returns if the position is inside a single quote</td>
+    </tr>
+    <tr>
+        <td>
+                            <span class="entry-attr">private                                            bool                                    </span>
+                $inDoubleQuotes                    </td>
+        <td>Returns if the position is inside a double quote</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.__construct.html">
+                __construct            </a>
+        </td>
+        <td>The constructor...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.peek.html">
+                peek            </a>
+        </td>
+        <td>Peeks 1 or more positions into the text...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.insertText.html">
+                insertText            </a>
+        </td>
+        <td>Inserts text into the current text at the current position...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.insertTextAtPos.html">
+                insertTextAtPos            </a>
+        </td>
+        <td>Insert text into the current text at specified position...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.addPos.html">
+                addPos            </a>
+        </td>
+        <td>Adds the current position +1...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.advance.html">
+                advance            </a>
+        </td>
+        <td>Advance one position forward...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer._id.html">
+                _id            </a>
+        </td>
+        <td>Collect an id...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer._attribute_value.html">
+                _attribute_value            </a>
+        </td>
+        <td>Collect an attribute value...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer._comment_value.html">
+                _comment_value            </a>
+        </td>
+        <td>Collect a comment value...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer._content_value.html">
+                _content_value            </a>
+        </td>
+        <td>Collect a content value...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.error.html">
+                error            </a>
+        </td>
+        <td>Throws an error message...</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="entry-attr">public function</span>
+            <a href="class.Lexer.get_next_token.html">
+                get_next_token            </a>
+        </td>
+        <td>Get the next token in the line...</td>
+    </tr>
+    </table>            </div>
+        </div>
+        <div class="footer">
+           2021 © Hendrik Weiler | 2021/16/12 11:07:05        </div>
+    </div>
+</body>
+</html>
