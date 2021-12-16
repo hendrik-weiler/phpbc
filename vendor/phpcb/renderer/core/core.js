@@ -33,7 +33,7 @@ function __getAttributes(node, asObject) {
  * @param path The url path
  * @param node The node
  */
-async function __ajaxCall(method, path, node) {
+async function __ajaxClickCall(method, path, node) {
     let data = {
         method : method,
         params : __getAttributes(node, true)

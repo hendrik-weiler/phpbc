@@ -10,6 +10,8 @@ require_once 'Comment.php';
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class Parser
+ * @namespace xmlparser
  */
 class Parser
 {
@@ -18,6 +20,7 @@ class Parser
 	 *
 	 * @var $current_token
 	 * @type Token|null
+	 * @memberOf Parser
 	 */
 	public $current_token = null;
 
@@ -26,6 +29,7 @@ class Parser
 	 *
 	 * @var $lexer
 	 * @type Lexer
+	 * @memberOf Parser
 	 */
 	public $lexer;
 
@@ -34,6 +38,8 @@ class Parser
 	 *
 	 * @var $document
 	 * @type Document
+	 * @memberOf Parser
+	 * @private
 	 */
 	private $document;
 
@@ -42,6 +48,8 @@ class Parser
 	 *
 	 * @var $gotRootTag
 	 * @type bool
+	 * @memberOf Parser
+	 * @private
 	 */
 	private $gotRootTag = false;
 
@@ -50,6 +58,7 @@ class Parser
 	 *
 	 * @var $declarations
 	 * @type array
+	 * @memberOf Parser
 	 */
 	public $declarations = array();
 
@@ -58,6 +67,7 @@ class Parser
 	 *
 	 * @var $doctypes
 	 * @type array
+	 * @memberOf Parser
 	 */
 	public $doctypes = array();
 
@@ -66,6 +76,7 @@ class Parser
 	 *
 	 * @var $nodes
 	 * @type array
+	 * @memberOf Parser
 	 */
 	public $nodes = array();
 
@@ -74,6 +85,7 @@ class Parser
 	 *
 	 * @var $declarationCallbable
 	 * @type callable
+	 * @memberOf Parser
 	 */
 	public $declarationCallbable;
 
@@ -82,6 +94,9 @@ class Parser
 	 *
 	 * @param Lexer $lexer The lexer instance
 	 * @param Document $document The document instance
+	 * @memberOf Parser
+	 * @method __construct
+	 * @constructor
 	 */
 	public function __construct($lexer, $document)
 	{
@@ -95,6 +110,8 @@ class Parser
 	 *
 	 * @param string $msg The error message
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method error
 	 */
 	public function error($msg='') {
 		$this->lexer->error($msg);
@@ -104,6 +121,8 @@ class Parser
 	 * Sets the on declaration event
 	 *
 	 * @param callable $func A callable
+	 * @memberOf Parser
+	 * @method setOnDeclaration
 	 */
 	public function setOnDeclaration(callable $func) {
 		$this->declarationCallbable = $func;
@@ -114,6 +133,8 @@ class Parser
 	 *
 	 * @param Type $type The type to eat
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method eat
 	 */
 	public function eat($type) {
 		if($this->current_token->type == $type) {
@@ -128,6 +149,8 @@ class Parser
 	 *
 	 * @return array
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method attribute
 	 */
 	public function attribute() {
 		$key = $this->current_token->value;
@@ -165,6 +188,8 @@ class Parser
 	 * Checks for a well formed delcaration
 	 *
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method declaration
 	 */
 	public function declaration() {
 
@@ -197,8 +222,11 @@ class Parser
 	 * @param array $children A list of children nodes
 	 * @param Node $parent The parent node
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method node
+	 * @protected
 	 */
-	public function node(&$children, $parent) {
+	protected function node(&$children, $parent) {
 		$this->eat(Type::TAG_START);
 		$tagName = $this->current_token->value;
 		$this->eat(Type::ID);
@@ -260,8 +288,10 @@ class Parser
 	 *
 	 * @return array|void
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method doctype_data
 	 */
-	public function doctype_data() {
+	protected function doctype_data() {
 		if($this->current_token->type == Type::QUOTE) {
 			$this->eat(Type::QUOTE);
 			$value = $this->current_token->value;
@@ -284,8 +314,11 @@ class Parser
 	 * Parse a doctype delaration
 	 *
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method doctypes
+	 * @protected
 	 */
-	public function doctypes() {
+	protected function doctypes() {
 
 		$name = $this->current_token->value;
 		$index = count($this->doctypes);
@@ -309,6 +342,8 @@ class Parser
 	 * The main parse method
 	 *
 	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method parse
 	 */
 	public function parse() {
 

@@ -2,6 +2,8 @@
 
 namespace Controller\twitter;
 
+use renderer\AjaxRequest;
+use renderer\AjaxResponse;
 use renderer\Request;
 
 require_once 'Controller.php';
@@ -10,7 +12,7 @@ class App extends Controller
 {
 	public $form_app_text;
 
-	public function like($renderer,\AjaxRequest $request,\AjaxResponse $response) {
+	public function like($renderer,AjaxRequest $request,AjaxResponse $response) {
 		if(!$this->canAccess()) {
 			$response->redirect('index');
 		}
@@ -32,7 +34,7 @@ class App extends Controller
 		);
 	}
 
-	public function retweet($renderer,\AjaxRequest $request,\AjaxResponse $response) {
+	public function retweet($renderer,AjaxRequest $request,AjaxResponse $response) {
 		if(!$this->canAccess()) {
 			$response->redirect('index');
 		}
@@ -99,7 +101,7 @@ class App extends Controller
 			');
 				$posts->appendChild($node);
 				$like = $renderer->document->getElementById('like' . $row['id']);
-				$like->addEventListener('ajax','like');
+				$like->addEventListener('ajaxClick','like');
 
 			} else {
 				$node = $renderer->document->createFromHTML('
@@ -113,10 +115,10 @@ class App extends Controller
 			');
 				$posts->appendChild($node);
 				$like = $renderer->document->getElementById('like' . $row['id']);
-				$like->addEventListener('ajax','like');
+				$like->addEventListener('ajaxClick','like');
 
 				$retweet = $renderer->document->getElementById('retweet' . $row['id']);
-				$retweet->addEventListener('ajax','retweet');
+				$retweet->addEventListener('ajaxClick','retweet');
 			}
 
 		}

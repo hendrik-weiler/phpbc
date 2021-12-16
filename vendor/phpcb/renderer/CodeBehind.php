@@ -10,6 +10,8 @@ use xmlparser\Document;
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class CodeBehind
+ * @namespace renderer
  */
 class CodeBehind
 {
@@ -18,6 +20,8 @@ class CodeBehind
 	 *
 	 * @var $document
 	 * @type Document
+	 * @memberOf CodeBehind
+	 * @protected
 	 */
 	protected $document;
 
@@ -25,6 +29,9 @@ class CodeBehind
 	 * The constructor
 	 *
 	 * @param Document $document The document instance
+	 * @memberOf CodeBehind
+	 * @method __construct
+	 * @constructor
 	 */
 	public function __construct($document)
 	{
@@ -39,6 +46,8 @@ class CodeBehind
 	 * @param Renderer $renderer The renderer instance
 	 * @param Request $request The request instance
 	 * @param Response $response The response instance
+	 * @memberOf CodeBehind
+	 * @method get_execute
 	 */
 	public function get_execute($renderer,$request,$response) {}
 
@@ -48,6 +57,8 @@ class CodeBehind
 	 * @param Renderer $renderer The renderer instance
 	 * @param Request $request The request instance
 	 * @param Response $response The response instance
+	 * @memberOf CodeBehind
+	 * @method post_execute
 	 */
 	public function post_execute($renderer,$request,$response) {}
 }

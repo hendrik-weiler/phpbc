@@ -12,6 +12,8 @@ require_once 'Token.php';
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class Lexer
+ * @namespace xmlparser
  */
 class Lexer
 {
@@ -20,6 +22,8 @@ class Lexer
 	 *
 	 * @var $pos
 	 * @type int
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $pos;
 
@@ -28,6 +32,8 @@ class Lexer
 	 *
 	 * @var $line
 	 * @type int
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $line;
 
@@ -36,6 +42,8 @@ class Lexer
 	 *
 	 * @var $linePos
 	 * @type int
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $linePos;
 
@@ -44,6 +52,8 @@ class Lexer
 	 *
 	 * @var $text
 	 * @type string
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $text;
 
@@ -52,6 +62,8 @@ class Lexer
 	 *
 	 * @var $current_char
 	 * @type string
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $current_char;
 
@@ -60,6 +72,8 @@ class Lexer
 	 *
 	 * @var $afterTagEnd
 	 * @type bool
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $afterTagEnd = false;
 
@@ -68,6 +82,8 @@ class Lexer
 	 *
 	 * @var $commentStart
 	 * @type bool
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $commentStart = false;
 
@@ -76,6 +92,8 @@ class Lexer
 	 *
 	 * @var $inTag
 	 * @type bool
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $inTag = false;
 
@@ -84,6 +102,8 @@ class Lexer
 	 *
 	 * @var $inSingleQuotes
 	 * @type bool
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $inSingleQuotes = false;
 
@@ -92,9 +112,18 @@ class Lexer
 	 *
 	 * @var $inDoubleQuotes
 	 * @type bool
+	 * @memberOf Lexer
+	 * @private
 	 */
 	private $inDoubleQuotes = false;
 
+	/**
+	 * The constructor
+	 *
+	 * @param string $text The text
+	 * @memberOf Lexer
+	 * @method __construct
+	 */
 	public function __construct($text)
 	{
 		$this->pos = 0;
@@ -103,6 +132,14 @@ class Lexer
 		$this->text = $text;
 	}
 
+	/**
+	 * Peeks 1 or more positions into the text
+	 *
+	 * @param int $num The peek number
+	 * @return string
+	 * @memberOf Lexer
+	 * @method peek
+	 */
 	public function peek($num = 1) {
 		$pos = $this->pos + $num;
 		if($pos > strlen($this->text)) {
@@ -111,29 +148,48 @@ class Lexer
 		return $this->text[$pos];
 	}
 
-	public function before() {
-		$pos = $this->pos - 1;
-		if($pos <= 0) {
-			return '';
-		}
-		return $this->text[$pos];
-	}
-
+	/**
+	 * Inserts text into the current text at the current position
+	 *
+	 * @param string $text The text to insert
+	 * @memberOf Lexer
+	 * @method insertText
+	 */
 	public function insertText($text) {
 		$this->insertTextAtPos($this->pos, $text);
 	}
 
+	/**
+	 * Insert text into the current text at specified position
+	 *
+	 * @param int $pos The position to insert
+	 * @param string $text The text to insert
+	 * @memberOf Lexer
+	 * @method insertTextAtPos
+	 */
 	public function insertTextAtPos($pos, $text) {
 		$begin = substr($this->text, 0, $pos+1);
 		$end = substr($this->text, $pos+1);
 		$this->text = $begin . $text . $end;
 	}
 
+	/**
+	 * Adds the current position +1
+	 *
+	 * @memberOf Lexer
+	 * @method addPos
+	 */
 	public function addPos() {
 		$this->pos += 1;
 		$this->linePos += 1;
 	}
 
+	/**
+	 * Advance one position forward
+	 *
+	 * @memberOf Lexer
+	 * @method advance
+	 */
 	public function advance() {
 		$this->addPos();
 		if($this->pos >= strlen($this->text)) {
@@ -143,6 +199,13 @@ class Lexer
 		}
 	}
 
+	/**
+	 * Collect an id
+	 *
+	 * @return string
+	 * @memberOf Lexer
+	 * @method _id
+	 */
 	public function _id() {
 		$result = '';
 
@@ -160,6 +223,13 @@ class Lexer
 		return $result;
 	}
 
+	/**
+	 * Collect an attribute value
+	 *
+	 * @return string
+	 * @memberOf Lexer
+	 * @method _attribute_value
+	 */
 	public function _attribute_value() {
 		$result = '';
 		$breakChar = '"';
@@ -182,6 +252,13 @@ class Lexer
 		return $result;
 	}
 
+	/**
+	 * Collect a comment value
+	 *
+	 * @return string
+	 * @memberOf Lexer
+	 * @method _comment_value
+	 */
 	public function _comment_value() {
 		$result = '';
 
@@ -205,6 +282,13 @@ class Lexer
 		return $result;
 	}
 
+	/**
+	 * Collect a content value
+	 *
+	 * @return string
+	 * @memberOf Lexer
+	 * @method _content_value
+	 */
 	public function _content_value() {
 		$result = '';
 
@@ -222,6 +306,14 @@ class Lexer
 		return $result;
 	}
 
+	/**
+	 * Throws an error message
+	 *
+	 * @param string $msg The message
+	 * @throws \Exception
+	 * @memberOf Lexer
+	 * @method error
+	 */
 	public function error($msg='') {
 		$before = '';
 		$after = '';
@@ -236,6 +328,14 @@ class Lexer
 			$this->linePos . ', char: ' . $this->current_char . ', line : ...' . $before . '(' . $this->current_char . ')' . $after . '...');
 	}
 
+	/**
+	 * Get the next token in the line
+	 *
+	 * @return Token
+	 * @throws \Exception
+	 * @memberOf Lexer
+	 * @method get_next_token
+	 */
 	public function get_next_token() {
 
 		if($this->pos >= strlen($this->text)) {

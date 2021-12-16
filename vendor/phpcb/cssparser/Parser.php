@@ -4,20 +4,67 @@ namespace cssparser;
 
 require_once 'Lexer.php';
 
+/**
+ * The parser class
+ *
+ * @author Hendrik Weiler
+ * @version 1.0
+ * @class Parser
+ * @namespace cssparser
+ */
 class Parser
 {
+	/**
+	 * Returns the current token
+	 *
+	 * @var $current_token
+	 * @type Token
+	 * @memberOf Parser
+	 * @private
+	 */
 	private $current_token;
 
+	/**
+	 * Returns the lexer instance
+	 *
+	 * @var $lexer
+	 * @type Lexer
+	 * @memberOf Parser
+	 * @private
+	 */
 	private $lexer;
 
+	/**
+	 * Returns the css definitions
+	 *
+	 * @var $definitions
+	 * @type array
+	 * @memberOf Parser
+	 */
 	public $definitions = array();
 
+	/**
+	 * The constructor
+	 *
+	 * @param Lexer $lexer The lexer instance
+	 * @memberOf Parser
+	 * @method __construct
+	 * @constructor
+	 */
 	public function __construct($lexer)
 	{
 		$this->lexer = $lexer;
 		$this->current_token = $this->lexer->get_next_token();
 	}
 
+	/**
+	 * Consumes the type and goes to the next token
+	 *
+	 * @param Type $type The type to eat
+	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method eat
+	 */
 	public function eat($type) {
 		if($this->current_token->type == $type) {
 			$this->current_token = $this->lexer->get_next_token();
@@ -26,14 +73,34 @@ class Parser
 		}
 	}
 
-	public function var_values(&$values) {
+	/**
+	 * Collects the values inside parenthesis
+	 *
+	 * @param array $values A list of values
+	 * @return array
+	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method var_values
+	 * @protected
+	 */
+	protected function var_values(&$values) {
 		$this->eat(Type::LPAREN);
 		$values = $this->attribute_values($values);
 		$this->eat(Type::RPAREN);
 		return $values;
 	}
 
-	public function attribute_values(&$values) {
+	/**
+	 * Collects the attribute values
+	 *
+	 * @param array $values The values
+	 * @return array
+	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method attribute_values
+	 * @protected
+	 */
+	protected function attribute_values(&$values) {
 		while (in_array($this->current_token->type,
 			array(Type::VALUE, Type::COMMA, Type::QUOTE))) {
 
@@ -63,7 +130,16 @@ class Parser
 		return $values;
 	}
 
-	public function attributes($selector) {
+	/**
+	 * Collects all attributes of a selector
+	 *
+	 * @param string $selector The css selector
+	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method attributes
+	 * @protected
+	 */
+	protected function attributes($selector) {
 
 		$this->definitions[$selector] = array();
 		while (in_array($this->current_token->type, array(Type::KEY, Type::COMMENT_START))) {
@@ -94,6 +170,14 @@ class Parser
 
 	}
 
+	/**
+	 * Parses the input
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @memberOf Parser
+	 * @method parse
+	 */
 	public function parse() {
 
 		while (in_array($this->current_token->type, array(Type::ID, Type::COMMENT_START))) {

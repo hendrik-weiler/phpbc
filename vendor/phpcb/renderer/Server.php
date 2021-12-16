@@ -1,5 +1,7 @@
 <?php
 
+namespace renderer;
+
 require_once RENDERER_PATH . './renderer/Renderer.php';
 
 /**
@@ -7,6 +9,8 @@ require_once RENDERER_PATH . './renderer/Renderer.php';
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class Server
+ * @namespace renderer
  */
 class Server {
 
@@ -15,6 +19,8 @@ class Server {
 	 *
 	 * @var $originalPath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $originalPath;
 
@@ -23,6 +29,8 @@ class Server {
 	 *
 	 * @var $path
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $path;
 
@@ -31,6 +39,8 @@ class Server {
 	 *
 	 * @var $routes
 	 * @type array
+	 * @memberOf Server
+	 * @private
 	 */
 	private $routes;
 
@@ -39,6 +49,8 @@ class Server {
 	 *
 	 * @var $pagePath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $pagePath = '/app/pages/';
 
@@ -47,6 +59,8 @@ class Server {
 	 *
 	 * @var $controllerPath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $controllerPath = '/app/controller/';
 
@@ -55,6 +69,8 @@ class Server {
 	 *
 	 * @var $classesPath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $classesPath = '/app/classes/';
 
@@ -63,6 +79,8 @@ class Server {
 	 *
 	 * @var $cssPath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $cssPath = '/app/css/';
 
@@ -71,6 +89,8 @@ class Server {
 	 *
 	 * @var $jsPath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $jsPath = '/app/js/';
 
@@ -79,6 +99,8 @@ class Server {
 	 *
 	 * @var $rendererPath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $rendererPath = '/vendor/phpcb/renderer/';
 
@@ -87,6 +109,8 @@ class Server {
 	 *
 	 * @var $imgPath
 	 * @type string
+	 * @memberOf Server
+	 * @private
 	 */
 	private $imgPath = '/app/img/';
 
@@ -95,6 +119,9 @@ class Server {
 	 *
 	 * @param string $path The request path
 	 * @param array $routes The routes array
+	 * @memberOf Server
+	 * @method __construct
+	 * @constructor
 	 */
 	public function __construct($path, $routes)
 	{
@@ -105,6 +132,10 @@ class Server {
 
 	/**
 	 * Removes the get parameters from the path
+	 *
+	 * @memberOf Server
+	 * @method removeGetParams
+	 * @private
 	 */
 	private function removeGetParams() {
 		$path = $this->path;
@@ -114,6 +145,9 @@ class Server {
 
 	/**
 	 * Includes the classes files
+	 *
+	 * @memberOf Server
+	 * @method includeClasses
 	 */
 	public function includeClasses() {
 		$path = getcwd() . $this->classesPath;
@@ -125,6 +159,9 @@ class Server {
 
 	/**
 	 * Includes the controller files
+	 *
+	 * @memberOf Server
+	 * @method includeControllers
 	 */
 	public function includeControllers() {
 		$path = getcwd() . $this->controllerPath;
@@ -139,6 +176,8 @@ class Server {
 	 *
 	 * @return false|string
 	 * @throws Exception
+	 * @memberOf Server
+	 * @method servePageIfExist
 	 */
 	public function servePageIfExist() {
 		$path = getcwd() . $this->pagePath .$this->path;
@@ -171,6 +210,8 @@ class Server {
 	 *
 	 * @param string $text The text
 	 * @return string
+	 * @memberOf Server
+	 * @method replacePlaceholders
 	 */
 	public function replacePlaceholders($text) {
 		$search = array(
@@ -196,6 +237,9 @@ class Server {
 
 	/**
 	 * Sends a forbidden message
+	 *
+	 * @memberOf Server
+	 * @method forbidden
 	 */
 	public function forbidden() {
 		http_response_code(403);
@@ -206,6 +250,8 @@ class Server {
 	 * Serves ressources(css,js) if exist
 	 *
 	 * @return false|string
+	 * @memberOf Server
+	 * @method serveRessourceIfExist
 	 */
 	public function serveRessourceIfExist() {
 		$ext = pathinfo($this->path, PATHINFO_EXTENSION);
@@ -261,6 +307,8 @@ class Server {
 	 * Serves a file
 	 *
 	 * @throws Exception
+	 * @memberOf Server
+	 * @method serve
 	 */
 	public function serve() {
 		$this->removeGetParams();

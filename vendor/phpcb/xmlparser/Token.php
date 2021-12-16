@@ -7,6 +7,8 @@ namespace xmlparser;
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class Token
+ * @namespace xmlparser
  */
 class Token
 {
@@ -15,6 +17,7 @@ class Token
 	 *
 	 * @var $type
 	 * @type Type
+	 * @memberOf Token
 	 */
 	public $type;
 
@@ -23,6 +26,7 @@ class Token
 	 *
 	 * @var $value
 	 * @type null|string
+	 * @memberOf Token
 	 */
 	public $value;
 
@@ -31,6 +35,9 @@ class Token
 	 *
 	 * @param Type $type The type
 	 * @param null|string $value The value
+	 * @memberOf Token
+	 * @method __construct
+	 * @constructor
 	 */
 	public function __construct($type,$value)
 	{

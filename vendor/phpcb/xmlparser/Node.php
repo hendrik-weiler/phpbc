@@ -7,6 +7,8 @@ namespace xmlparser;
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class Node
+ * @namespace xmlparser
  */
 class Node
 {
@@ -15,6 +17,7 @@ class Node
 	 *
 	 * @type string
 	 * @var $id
+	 * @memberOf Node
 	 */
 	public $id;
 
@@ -23,6 +26,7 @@ class Node
 	 *
 	 * @var $name
 	 * @type string
+	 * @memberOf Node
 	 */
 	public $name = '';
 
@@ -31,6 +35,7 @@ class Node
 	 *
 	 * @var $parentNode
 	 * @type Node|null
+	 * @memberOf Node
 	 */
 	public $parentNode;
 
@@ -39,6 +44,7 @@ class Node
 	 *
 	 * @var $children
 	 * @type array
+	 * @memberOf Node
 	 */
 	public $children = array();
 
@@ -47,6 +53,7 @@ class Node
 	 *
 	 * @var $attributes
 	 * @type array
+	 * @memberOf Node
 	 */
 	private $attributes = array();
 
@@ -55,6 +62,7 @@ class Node
 	 *
 	 * @var $content
 	 * @type string
+	 * @memberOf Node
 	 */
 	protected $content = '';
 
@@ -63,6 +71,7 @@ class Node
 	 *
 	 * @var $document
 	 * @type Document
+	 * @memberOf Node
 	 */
 	protected $document;
 
@@ -73,6 +82,8 @@ class Node
 	 * @param array $attributes A map of attributes
 	 * @param Document $document A document instance
 	 * @param Node $parent A parent node
+	 * @memberOf Node
+	 * @method __construct
 	 */
 	public function __construct($name, $attributes, $document, $parent=null)
 	{
@@ -87,6 +98,8 @@ class Node
 	 * Sets the content
 	 *
 	 * @param string $text The text
+	 * @memberOf Node
+	 * @method setContent
 	 */
 	public function setContent($text) {
 		$this->content = ($text);
@@ -96,6 +109,8 @@ class Node
 	 * Gets the content
 	 *
 	 * @return string
+	 * @memberOf Node
+	 * @method getContent
 	 */
 	public function getContent() {
 		return $this->content;
@@ -105,6 +120,8 @@ class Node
 	 * Adds text to the content
 	 *
 	 * @param string $text The text
+	 * @memberOf Node
+	 * @method appendContent
 	 */
 	public function appendContent($text) {
 		$this->content .= ($text);
@@ -114,10 +131,13 @@ class Node
 	 * Adds an event to the node
 	 *
 	 * Available:
-	 * - onclick
+	 * - click
+	 * - ajaxClick
 	 *
 	 * @param string $name The name of event without 'on'
 	 * @param string $funcName The name of the function in the codebehind class
+	 * @memberOf Node
+	 * @method addEventListener
 	 */
 	public function addEventListener($name, $funcName) {
 		$attributes = array();
@@ -132,8 +152,8 @@ class Node
 				}
 				$this->setAttribute('onclick',"javascript:event.preventDefault();__clickCall('" . $funcName . "','{request_url}', this);return false");
 				break;
-			case 'ajax':
-				$this->setAttribute('onclick',"javascript:event.preventDefault();__ajaxCall('" . $funcName . "','{request_url}', this);return false;");
+			case 'ajaxClick':
+				$this->setAttribute('onclick',"javascript:event.preventDefault();__ajaxClickCall('" . $funcName . "','{request_url}', this);return false;");
 				break;
 		}
 	}
@@ -142,6 +162,9 @@ class Node
 	 * Generates an attributes string
 	 *
 	 * @return string
+	 * @memberOf Node
+	 * @method generateAttributes
+	 * @protected
 	 */
 	protected function generateAttributes() {
 		$result = array();
@@ -160,6 +183,8 @@ class Node
 	 *
 	 * @param string $name The name of the attribute
 	 * @return string|null
+	 * @memberOf Node
+	 * @method getAttribute
 	 */
 	public function getAttribute($name) {
 		if(isset($this->attributes[$name])) {
@@ -172,6 +197,8 @@ class Node
 	 * Gets all attributes as map
 	 *
 	 * @return array
+	 * @memberOf Node
+	 * @method getAttributes
 	 */
 	public function getAttributes() {
 		return $this->attributes;
@@ -182,6 +209,8 @@ class Node
 	 *
 	 * @param string $name The name
 	 * @param string $value The value
+	 * @memberOf Node
+	 * @method setAttribute
 	 */
 	public function setAttribute($name,$value) {
 		$this->attributes[$name] = $value;
@@ -193,6 +222,8 @@ class Node
 	 *
 	 * @param string $name The name
 	 * @return bool
+	 * @memberOf Node
+	 * @method removeAttribute
 	 */
 	public function removeAttribute($name) {
 		if(isset($this->attributes[$name])) {
@@ -206,6 +237,8 @@ class Node
 	 * Adds a node to the children
 	 *
 	 * @param Node $node The node to append
+	 * @memberOf Node
+	 * @method appendChild
 	 */
 	public function appendChild(&$node) {
 		if($node instanceof Node) {
@@ -219,6 +252,8 @@ class Node
 	 * Removes a node from the children
 	 *
 	 * @param Node $node The node
+	 * @memberOf Node
+	 * @method removeChild
 	 */
 	public function removeChild(&$node) {
 		if(isset($this->children[$node->id])) {
@@ -231,6 +266,8 @@ class Node
 	 *
 	 * @return \cssparser\Document
 	 * @throws \Exception
+	 * @memberOf Node
+	 * @method getCSS
 	 */
 	public function getCSS() {
 		if($this->name == 'style') {
@@ -246,6 +283,8 @@ class Node
 	 * Converts the node with children to xml
 	 *
 	 * @return string
+	 * @memberOf Node
+	 * @method toXML
 	 */
 	public function toXML() {
 		$result = '<' . $this->name;

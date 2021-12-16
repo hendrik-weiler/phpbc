@@ -10,67 +10,95 @@ require_once 'Parser.php';
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class Document
  */
 class Document
 {
 	/**
 	 * Returns the parser instance
 	 *
-	 * @var Parser
+	 * @memberOf Document
+	 * @var $parser
+	 * @type Parser
+	 * @private
 	 */
 	private $parser;
 
 	/**
 	 * Returns the lexer instance
 	 *
-	 * @var Lexer
+	 * @memberOf Document
+	 * @var $lexer
+	 * @type Lexer
+	 * @private
 	 */
 	private $lexer;
 
 	/**
 	 * Returns the root node of the document
 	 *
-	 * @var Node
+	 * @var $rootNode
+	 * @type Node
+	 * @memberOf Document
 	 */
 	public $rootNode;
 
 	/**
 	 * Returns a list of declarations
 	 *
-	 * @var array
+	 * @var $declarations
+	 * @type array
+	 * @memberOf Document
+	 * @private
 	 */
 	private $declarations;
 
 	/**
 	 * Returns a list of doctypes
 	 *
-	 * @var array
+	 * @var $doctypes
+	 * @type array
+	 * @memberOf Document
+	 * @private
 	 */
 	private $doctypes;
 
 	/**
 	 * Returns a id,node map
 	 *
-	 * @var array
+	 * @var $ids
+	 * @type array
+	 * @memberOf Document
+	 * @private
 	 */
 	private $ids = array();
 
 	/**
 	 * Returns a map of tagName,Node[]
 	 *
-	 * @var array
+	 * @var $tags
+	 * @type array
+	 * @memberOf Document
+	 * @private
 	 */
 	private $tags = array();
 
 	/**
 	 * Returns a map of formName,array
 	 *
-	 * @var array
+	 * @var $forms
+	 * @type array
+	 * @memberOf Document
+	 * @private
 	 */
 	private $forms = array();
 
 	/**
 	 * @param $text string The xml to parse
+	 *
+	 * @constructor
+	 * @memberOf Document
+	 * @method __construct
 	 */
 	public function __construct($text)
 	{
@@ -84,6 +112,8 @@ class Document
 	 *
 	 * @param string $html The html
 	 * @return mixed|Node
+	 * @memberOf Document
+	 * @method createFromHTML
 	 */
 	public function createFromHTML($html) {
 		$res = new Document($html);
@@ -91,6 +121,15 @@ class Document
 		return $rootNode;
 	}
 
+	/**
+	 * Gets called when a declaration is in the text
+	 *
+	 * @param string $name The name
+	 * @param array $attributes The attributes
+	 * @param Parser $parser The parser instance
+	 * @memberOf Document
+	 * @method declarationCall
+	 */
 	public function declarationCall($name, $attributes, $parser) {
 		if($name == 'include') {
 			if(isset($attributes['page'])) {
@@ -112,6 +151,9 @@ class Document
 
 	/**
 	 * Prints all tokens from the lexer
+	 *
+	 * @method printTokens
+	 * @memberOf Document
 	 */
 	public function printTokens() {
 		var_dump($this->parser->current_token);
@@ -127,6 +169,8 @@ class Document
 	 * Indexes from a node
 	 *
 	 * @param $node Node The node
+	 * @method indexNodes
+	 * @memberOf Document
 	 */
 	public function indexNodes($node) {
 		if($id = $node->getAttribute('id')) {
@@ -168,6 +212,9 @@ class Document
 
 	/**
 	 * Reindex all nodes
+	 *
+	 * @memberOf Document
+	 * @method reIndexNodes
 	 */
 	public function reIndexNodes() {
 		$this->ids = array();
@@ -180,6 +227,8 @@ class Document
 	 *
 	 * @param $tagName The tag name
 	 * @return array
+	 * @memberOf Document
+	 * @method getElementsByTagName
 	 */
 	public function getElementsByTagName($tagName) {
 		if(isset($this->tags[$tagName])) {
@@ -193,6 +242,8 @@ class Document
 	 *
 	 * @param $id string The id
 	 * @return mixed|null
+	 * @memberOf Document
+	 * @method getElementById
 	 */
 	public function getElementById($id) {
 		if(isset($this->ids[$id])) {
@@ -206,6 +257,8 @@ class Document
 	 *
 	 * @param $tagName string The tag name
 	 * @return Node
+	 * @memberOf Document
+	 * @method createElement
 	 */
 	public function createElement($tagName) {
 		return new Node($tagName, array(), $this);
@@ -218,6 +271,8 @@ class Document
 	 * <!DOCTYPE
 	 *
 	 * @return array
+	 * @memberOf Document
+	 * @method getDoctypes
 	 */
 	public function getDoctypes() {
 		return $this->parser->doctypes;
@@ -230,6 +285,8 @@ class Document
 	 * <?xml ?>
 	 *
 	 * @return array
+	 * @memberOf Document
+	 * @method getDeclarations
 	 */
 	public function getDeclarations() {
 		return $this->parser->declarations;
@@ -239,6 +296,8 @@ class Document
 	 * Gets the forms of the document
 	 *
 	 * @return array
+	 * @memberOf Document
+	 * @method getForms
 	 */
 	public function getForms() {
 		return $this->forms;
@@ -248,6 +307,8 @@ class Document
 	 * Gets the tags
 	 *
 	 * @return array
+	 * @memberOf Document
+	 * @method getTags
 	 */
 	public function getTags() {
 		return $this->tags;
@@ -258,6 +319,8 @@ class Document
 	 *
 	 * @param $name string The doctype name
 	 * @return string
+	 * @memberOf Document
+	 * @method generateDoctype
 	 */
 	public function generateDoctype($name) {
 		$result = '';
@@ -283,6 +346,8 @@ class Document
 	 * Parses the document
 	 *
 	 * @return mixed|Node
+	 * @memberOf Document
+	 * @method parse
 	 */
 	public function parse() {
 		$this->parser->parse();

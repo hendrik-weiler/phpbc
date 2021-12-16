@@ -15,24 +15,89 @@ require_once RENDERER_PATH . './renderer/form/Input.php';
 use cssparser\Parser as Parser;
 use \xmlparser\Document as Document;
 
-
+/**
+ * The renderer class
+ *
+ * @class Renderer
+ * @namespace renderer
+ */
 class Renderer
 {
+	/**
+	 * Returns a document instance
+	 *
+	 * @var $document
+	 * @type xmlparser.Document
+	 * @memberOf Renderer
+	 */
 	public $document;
 
+	/**
+	 * Returns a list of namespaces
+	 *
+	 * @var $namespaces
+	 * @type array
+	 * @memberOf Renderer
+	 * @private
+	 */
 	private $namespaces = array();
 
+	/**
+	 * Returns a list of component instances
+	 *
+	 * @var $componentInstances
+	 * @type array
+	 * @memberOf Renderer
+	 * @private
+	 */
 	private $componentInstances = array();
 
+	/**
+	 * Returns a CodeBehind class or null
+	 *
+	 * @var $codeBehind
+	 * @type CodeBehind
+	 * @memberOf Renderer
+	 */
 	public $codeBehind = null;
 
+	/**
+	 * Returns a callable for a injection of html in the render process
+	 *
+	 * @var $injectHTMLCallback
+	 * @type callable
+	 * @memberOf Renderer
+	 * @protected
+	 */
 	protected $injectHTMLCallback = null;
 
+	/**
+	 * The constructor
+	 *
+	 * @param string $text The text to render
+	 * @memberOf Renderer
+	 * @method __construct
+	 * @constructor
+	 */
 	public function __construct($text)
 	{
 		$this->document = new Document($text);
 	}
 
+	/**
+	 * Runs a class
+	 *
+	 * The identifier is for example:
+	 * \namespace\class
+	 * \class
+	 *
+	 * The class must extend the CodeBehind class
+	 *
+	 * @param string $className The class identifier
+	 * @throws \Exception
+	 * @memberOf Renderer
+	 * @method runClass
+	 */
 	public static function runClass($className) {
 		if(class_exists($className)) {
 			$request = new Request();
@@ -48,12 +113,26 @@ class Renderer
 		}
 	}
 
+	/**
+	 * Adds a namespace
+	 *
+	 * @param RendererNamespace $namespace The namespace class
+	 * @memberOf Renderer
+	 * @method addNamespace
+	 */
 	public function addNamespace(RendererNamespace $namespace) {
 		$this->namespaces[] = $namespace;
 		$namespace->setNamespacePath(RENDERER_PATH . './namespaces');
 		$namespace->document = $this->document;
 	}
 
+	/**
+	 * Checks for declarations
+	 *
+	 * @throws \Exception
+	 * @memberOf Renderer
+	 * @method checkDeclarations
+	 */
 	public function checkDeclarations() {
 		foreach ($this->document->getDeclarations() as $declaration) {
 			if($declaration['__type__'] == 'import') {
@@ -83,6 +162,12 @@ class Renderer
 		}
 	}
 
+	/**
+	 * Initializes the components
+	 *
+	 * @memberOf Renderer
+	 * @method initComponents
+	 */
 	public function initComponents() {
 		$tags = $this->document->getTags();
 		foreach ($this->namespaces as $namespace) {
@@ -105,10 +190,28 @@ class Renderer
 		}
 	}
 
+	/**
+	 * Set the injectHTML callback
+	 *
+	 * Signature:
+	 * void callback(\xmlparser\Document $document)
+	 *
+	 * @param callable $func The callback function
+	 * @memberOf Renderer
+	 * @method injectHTML
+	 */
 	public function injectHTML(callable $func) {
 		$this->injectHTMLCallback = $func;
 	}
 
+	/**
+	 * The render process
+	 *
+	 * @return string|void
+	 * @throws \Exception
+	 * @memberOf Renderer
+	 * @method render
+	 */
 	public function render() {
 		$rootNode = $this->document->parse();
 		call_user_func($this->injectHTMLCallback, $this->document);
@@ -124,7 +227,7 @@ class Renderer
 					if(property_exists($this->codeBehind, $property)) {
 						if($inputElm->name == 'input'
 							|| $inputElm->name == 'textarea') {
-							$this->codeBehind->{$property} = new \Input($inputElm, $this, $request);
+							$this->codeBehind->{$property} = new Input($inputElm, $this, $request);
 						}
 					}
 				}
@@ -149,11 +252,11 @@ class Renderer
 							print 'invalid call';
 						} else {
 							if(method_exists($this->codeBehind,$inputJSON['method'])) {
-								$request = new \AjaxRequest();
+								$request = new AjaxRequest();
 								$request->fillValues($inputJSON['params']);
-								$response = new \AjaxResponse($inputJSON['method']);
+								$response = new AjaxResponse($inputJSON['method']);
 								$result = call_user_func_array(array($this->codeBehind, $inputJSON['method']), array($this, $request, $response));
-								if($result instanceof \AjaxResponse) {
+								if($result instanceof AjaxResponse) {
 									print $result;
 								} else {
 									$response->setContent($result);

@@ -5,32 +5,144 @@ namespace cssparser;
 require_once 'Token.php';
 require_once 'Type.php';
 
+/**
+ * The lexer class
+ *
+ * @author Hendrik Weiler
+ * @version 1.0
+ * @class Lexer
+ * @namespace cssparser
+ */
 class Lexer
 {
+	/**
+	 * Returns the current position
+	 *
+	 * @var $pos
+	 * @type int
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $pos;
 
+	/**
+	 * Returns the current line
+	 *
+	 * @var $line
+	 * @type int
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $line;
 
+	/**
+	 * Returns the current line position
+	 *
+	 * @var $linePos
+	 * @type int
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $linePos;
 
+	/**
+	 * Returns the current char
+	 *
+	 * @var $current_char
+	 * @type string
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $current_char;
 
+	/**
+	 * Returns the text
+	 *
+	 * @var $text
+	 * @type string
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $text;
 
+	/**
+	 * Returns if the position is in a value
+	 *
+	 * @var $inValue
+	 * @type bool
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $inValue = false;
 
+	/**
+	 * Returns if the position is in brackets
+	 *
+	 * @var $inBrackets
+	 * @type bool
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $inBrackets = false;
 
+	/**
+	 * Returns the css selector regex
+	 *
+	 * @var $cssSelectorRX
+	 * @type string
+	 * @private
+	 * @memberOf Lexer
+	 */
 	private $cssSelectorRX = '#[\.\#a-zA-Z0-9\-\:\-\% \[\]\"\=\,]#';
 
+	/**
+	 * Returns the css variable selector regex
+	 *
+	 * @var $cssVarDefinitionRX
+	 * @type string
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $cssVarDefinitionRX = '#[\.\#a-zA-Z0-9\-\-\% ]#';
 
+	/**
+	 * Returns the css quotes regex
+	 *
+	 * @var $cssQuotesRX
+	 * @type string
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $cssQuotesRX = '#[^ ]*#';
 
+	/**
+	 * Returns if the position is in a comment
+	 *
+	 * @var $inComment
+	 * @type bool
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $inComment = false;
 
+	/**
+	 * Returns if the position is in quotes
+	 *
+	 * @var $inQuotes
+	 * @type bool
+	 * @memberOf Lexer
+	 * @private
+	 */
 	private $inQuotes = false;
 
+	/**
+	 * The constructor
+	 *
+	 * @param string $text The text
+	 * @memberOf Lexer
+	 * @constructor
+	 * @method __construct
+	 */
 	public function __construct($text)
 	{
 		$this->text = $text;
@@ -39,35 +151,80 @@ class Lexer
 		$this->line = 1;
 	}
 
+	/**
+	 * Throws an error
+	 *
+	 * @throws \Exception
+	 * @memberOf Lexer
+	 * @method error
+	 */
 	public function error() {
 		throw new \Exception(
 			'Parse error at line: ' . $this->line . ', pos: '
 			. $this->linePos . ', char: ' . $this->current_char);
 	}
 
-	public function addPos() {
+	/**
+	 * Adds the current position +1
+	 *
+	 * @memberOf Lexer
+	 * @method addPos
+	 * @protected
+	 */
+	protected function addPos() {
 		$this->pos += 1;
 		$this->linePos += 1;
 	}
 
-	public function minusPos() {
+	/**
+	 * Subtracts the current position -1
+	 *
+	 * @memberOf Lexer
+	 * @protected
+	 * @method minusPos
+	 */
+	protected function minusPos() {
 		$this->pos -= 1;
 		$this->linePos -= 1;
 	}
 
-	public function advance() {
+	/**
+	 * Advance one position forward
+	 *
+	 * @memberOf Lexer
+	 * @protected
+	 * @method advance
+	 */
+	protected function advance() {
 		$this->addPos();
 		$this->current_char = $this->text[$this->pos];
 	}
 
-	public function peek($number=1) {
+	/**
+	 * Peeks 1 or more positions into the text
+	 *
+	 * @param int $num The peek number
+	 * @return string
+	 * @memberOf Lexer
+	 * @method peek
+	 * @protected
+	 */
+	protected function peek($number=1) {
 		if($this->pos+$number >= strlen($this->text)) {
 			return '';
 		}
 		return $this->text[$this->pos + $number];
 	}
 
-	public function _id() {
+	/**
+	 * Collect an id
+	 *
+	 * @return string
+	 * @memberOf Lexer
+	 * @method _id
+	 * @protected
+	 */
+	protected function _id() {
 		$result = '';
 		$rx = $this->cssSelectorRX;
 		if($this->inValue && $this->inQuotes) {
@@ -100,7 +257,15 @@ class Lexer
 		return $result;
 	}
 
-	public function _comment() {
+	/**
+	 * Collect a comment
+	 *
+	 * @return string
+	 * @memberOf Lexer
+	 * @method _comment
+	 * @protected
+	 */
+	protected function _comment() {
 		$result = '';
 
 		while (true) {
@@ -119,6 +284,14 @@ class Lexer
 		return $result;
 	}
 
+	/**
+	 * Get the next token in the line
+	 *
+	 * @return Token
+	 * @throws \Exception
+	 * @memberOf Lexer
+	 * @method get_next_token
+	 */
 	public function get_next_token() {
 
 		if($this->pos >= strlen($this->text)) {

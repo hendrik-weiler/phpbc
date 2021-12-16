@@ -7,6 +7,8 @@ namespace renderer;
  *
  * @author Hendrik Weiler
  * @version 1.0
+ * @class Request
+ * @namespace renderer
  */
 class Request
 {
@@ -15,6 +17,8 @@ class Request
 	 *
 	 * @param string $name The name
 	 * @return mixed|null
+	 * @memberOf Request
+	 * @method getValue
 	 */
 	public function getValue($name) {
 		if(isset($_REQUEST[$name])) {
@@ -27,6 +31,8 @@ class Request
 	 * Gets all the url segments
 	 *
 	 * @return false|string[]
+	 * @memberOf Request
+	 * @method getUrlSegments
 	 */
 	public function getUrlSegments() {
 		return explode('/',$_SERVER['REQUEST_URI']);
@@ -37,6 +43,8 @@ class Request
 	 *
 	 * @param int $index The index
 	 * @return mixed|string
+	 * @memberOf Request
+	 * @method getUrlSegment
 	 */
 	public function getUrlSegment($index) {
 		$segments = $this->getUrlSegments();

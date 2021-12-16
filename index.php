@@ -6,5 +6,5 @@ require_once RENDERER_PATH . 'renderer/Server.php';
 require_once 'app/config.php';
 require_once 'app/routes.php';
 
-$server = new Server($_SERVER['REQUEST_URI'], $routes);
+$server = new \renderer\Server($_SERVER['REQUEST_URI'], $routes);
 $server->serve();

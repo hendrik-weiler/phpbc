@@ -64,7 +64,7 @@ You can add ajax events on nodes
 Example:
 ```
 $retweet = $renderer->document->getElementById('retweet' . $row['id']);
-$retweet->addEventListener('ajax','retweet');
+$retweet->addEventListener('ajaxClick','retweet');
 // ajax usage in the twitter example
 ```
 

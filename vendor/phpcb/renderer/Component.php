@@ -5,21 +5,74 @@ namespace renderer;
 use xmlparser\Document;
 use xmlparser\Node;
 
+/**
+ * The component class
+ *
+ * @author Hendrik Weiler
+ * @version 1.0
+ * @class Component
+ * @namespace renderer
+ */
 class Component
 {
+	/**
+	 * Returns the component name
+	 *
+	 * @var $name
+	 * @type string
+	 * @memberOf Component
+	 */
 	public $name;
 
+	/**
+	 * Returns the document instance
+	 *
+	 * @var $document
+	 * @type xmlparser.Document
+	 * @memberOf Component
+	 */
 	public $document;
 
+	/**
+	 * Returns the component path
+	 *
+	 * @var $componentPath
+	 * @type string
+	 * @memberOf Component
+	 */
 	public $componentPath;
 
+	/**
+	 * Returns the root node of the component
+	 *
+	 * @var $node
+	 * @type Node
+	 * @memberOf Component
+	 */
 	public $node;
 
+	/**
+	 * The constructor
+	 *
+	 * @param string $name The name of the component
+	 * @memberOf Component
+	 * @method __construct
+	 * @constructor
+	 */
 	public function __construct($name)
 	{
 		$this->name = $name;
 	}
 
+	/**
+	 * Gets the head element of the document
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 * @memberOf Component
+	 * @protected
+	 * @method getHeadElement
+	 */
 	protected function getHeadElement() {
 		$head = $this->document->getElementsByTagName('head');
 		if(count($head) > 0) {
@@ -29,17 +82,15 @@ class Component
 		}
 	}
 
-	protected function setEvent($name) {
-		if($onclick = $this->node->getAttribute($name)) {
-			$attributes = array();
-			foreach($this->node->getAttributes() as $key => $value) {
-				if($key == $name) continue;
-				$attributes[] = $key . '=' . $value;
-			}
-			$this->node->setAttribute('onclick','javascript:location.href="?__execute__=' . $onclick . '&' . implode('&', $attributes) . '"');
-		}
-	}
-
+	/**
+	 * Is a javascript file included
+	 *
+	 * @param string $path The path to include
+	 * @return bool
+	 * @memberOf Component
+	 * @method isJavaScriptIncluded
+	 * @protected
+	 */
 	protected function isJavaScriptIncluded($path) {
 		$tags = $this->document->getTags();
 		if(isset($tags['script'])) {
@@ -54,6 +105,15 @@ class Component
 		return false;
 	}
 
+	/**
+	 * Is a stylesheet file included
+	 *
+	 * @param string $path The stylesheet path
+	 * @return bool
+	 * @memberOf Component
+	 * @method isStylesheetIncluded
+	 * @protected
+	 */
 	protected function isStylesheetIncluded($path) {
 		$tags = $this->document->getTags();
 		if(isset($tags['link'])) {
@@ -68,10 +128,25 @@ class Component
 		return false;
 	}
 
+	/**
+	 * Changes the tag name of the root node
+	 *
+	 * @param string $tagName The new tag name
+	 * @memberOf Component
+	 * @method replaceTagName
+	 */
 	public function replaceTagName($tagName) {
 		$this->node->name = $tagName;
 	}
 
+	/**
+	 * Adds a stylesheet to the document
+	 *
+	 * @param string $path The path
+	 * @throws \Exception
+	 * @memberOf Component
+	 * @method addStyleSheet
+	 */
 	public function addStyleSheet($path) {
 		if($this->isStylesheetIncluded($path)) return;
 		if(file_exists($this->componentPath . $path)) {
@@ -86,6 +161,14 @@ class Component
 		}
 	}
 
+	/**
+	 * Adds a javascript file to the document
+	 *
+	 * @param string $path The path
+	 * @throws \Exception
+	 * @memberOf Component
+	 * @method addJavaScript
+	 */
 	public function addJavaScript($path) {
 		if($this->isJavaScriptIncluded($path)) return;
 		if(file_exists($this->componentPath . $path)) {
@@ -97,21 +180,5 @@ class Component
 		} else {
 			throw new \Exception('Cant find javascript file from path "' . $path . '"');
 		}
-	}
-
-	public function loadTemplate($path) {
-		if(file_exists($path)) {
-			$html = file_get_contents($path);
-			$document = new Document($html);
-			$document->parse();
-			return $document;
-		} else {
-			throw new \Exception('Cant find template file from path "' . $path . '"');
-		}
-		return null;
-	}
-
-	public function render() {
-
 	}
 }
