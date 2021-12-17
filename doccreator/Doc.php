@@ -257,6 +257,10 @@ class Doc
             $fContent = file_get_contents($file);
             $this->parse($fContent);
         }
+		foreach(glob($this->sourceDir . '/**/**/*.php') as $file) {
+			$fContent = file_get_contents($file);
+			$this->parse($fContent);
+		}
         $this->buildExamplesMap();
 		$this->buildNamespaceMap();
         $this->buildPagesMap();
@@ -288,7 +292,7 @@ class Doc
 					$searchList[] = array('name' => $property['name'], 'desc' => $property['description'],'file'=>$classFileName,'type'=>'property');
 				}
 				foreach ($class['methods'] as $method) {
-					$methodFileName = 'class.' . $class['name'] . '.' . $method['name'] . '.html';
+					$methodFileName = 'class.' . $namespace . '.' . $class['name'] . '.' . $method['name'] . '.html';
 					$searchList[] = array('name' => $method['name'], 'desc' => $method['description'],'file'=>$methodFileName,'type'=>'method');
 					$methodHTML = $this->createFromTemplate('tmpl.method.php', $method, $this->printBreadcrumbNav($class,'method', $method, $namespace));
 					file_put_contents($this->buildDir . '/' . $methodFileName, $methodHTML);

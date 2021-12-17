@@ -1,10 +1,6 @@
 <?php print $breadcrumbnav; ?>
 <p class="description">
     <?php print nl2br($data['description']) ?>
-    <?php if(strlen($data['decorator']) > 0): ?>
-        <h6>Decorator</h6>
-        <?php print $this->printDecorator($data,true); ?>
-    <?php endif; ?>
     <?php print $this->printExamples($data); ?>
 </p>
 <h4>
@@ -42,7 +38,7 @@
     <tr>
         <td>
             <span class="entry-attr"><?php print $method['access'] . ' ' . $method['type'] ?></span>
-            <a href="class.<?php print $data['name'] ?>.<?php print $method['name'] ?>.html">
+            <a href="class.<?php print $data['namespace'] ?>.<?php print $data['name'] ?>.<?php print $method['name'] ?>.html">
                 <?php print $method['name'] ?>
             </a>
         </td>

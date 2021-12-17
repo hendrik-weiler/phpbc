@@ -20,7 +20,7 @@
     <div class="container">
         <div class="header">
             <div class="col1">
-                <h1>phpcb Documentation v<?php print $this->version ?></h1>
+                <h1>phpcb Documentation v.<?php print $this->version ?></h1>
             </div>
             <div class="col2">
                 <input id="search" type="search" placeholder="Search for classes, properties, methods and pages...">
