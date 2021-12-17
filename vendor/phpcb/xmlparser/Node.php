@@ -134,6 +134,9 @@ class Node
 	 * - click
 	 * - ajaxClick
 	 *
+	 * @example addEventClick
+	 * @example addEventAjaxClick
+	 *
 	 * @param string $name The name of event without 'on'
 	 * @param string $funcName The name of the function in the codebehind class
 	 * @memberOf Node
@@ -264,7 +267,7 @@ class Node
 	/**
 	 * Gets the css document on a style tag
 	 *
-	 * @return \cssparser\Document
+	 * @return cssparser.Document
 	 * @throws \Exception
 	 * @memberOf Node
 	 * @method getCSS
