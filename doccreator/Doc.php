@@ -244,23 +244,30 @@ class Doc
         return $resultHTML;
     }
 
+	/**
+	 * Recursively search for a pattern and returns the files
+	 *
+	 * @param string $pattern The glob pattern
+	 * @param int $flags The flags
+	 * @return array|false
+	 */
+	private function rglob($pattern, $flags = 0) {
+		$files = glob($pattern, $flags);
+		foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+			$files = array_merge($files, $this->rglob($dir.'/'.basename($pattern), $flags));
+		}
+		return $files;
+	}
+
     /**
      * Builds the documentation
      */
     public function build() {
         // parse all files
-        foreach(glob($this->sourceDir . '/*.php') as $file) {
+        foreach($this->rglob($this->sourceDir . '/*.php') as $file) {
             $fContent = file_get_contents($file);
             $this->parse($fContent);
         }
-        foreach(glob($this->sourceDir . '/**/*.php') as $file) {
-            $fContent = file_get_contents($file);
-            $this->parse($fContent);
-        }
-		foreach(glob($this->sourceDir . '/**/**/*.php') as $file) {
-			$fContent = file_get_contents($file);
-			$this->parse($fContent);
-		}
         $this->buildExamplesMap();
 		$this->buildNamespaceMap();
         $this->buildPagesMap();

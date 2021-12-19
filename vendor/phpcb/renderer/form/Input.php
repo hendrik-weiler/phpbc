@@ -81,6 +81,12 @@ class Input
 	 * @method setValue
 	 */
 	public function setValue($value) {
-		$this->node->setAttribute('value',$value);
+		if($this->node->name == 'textarea') {
+			$this->node->setContent($value);
+		} else if($this->node->name == 'select') {
+			$this->node->setAttribute('data-init',$value);
+		} else {
+			$this->node->setAttribute('value',$value);
+		}
 	}
 }

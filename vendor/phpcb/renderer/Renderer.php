@@ -72,6 +72,16 @@ class Renderer
 	protected $injectHTMLCallback = null;
 
 	/**
+	 * Returns a map of variables to replace in the result xml
+	 *
+	 * @var $injectHTMLCallback
+	 * @type callable
+	 * @memberOf Renderer
+	 * @protected
+	 */
+	protected $variables = array();
+
+	/**
 	 * The constructor
 	 *
 	 * @param string $text The text to render
@@ -135,8 +145,8 @@ class Renderer
 	 */
 	public function checkDeclarations() {
 		foreach ($this->document->getDeclarations() as $declaration) {
-			if($declaration['__type__'] == 'import') {
-				$compName = $declaration['name'];
+			if($declaration->name == 'import') {
+				$compName = $declaration->name;
 				$loadPath = RENDERER_PATH . './namespaces/' . $compName . '/' . $compName . '.php';
 				if(file_exists($loadPath)) {
 					require_once $loadPath;
@@ -151,8 +161,8 @@ class Renderer
 
 				}
 			}
-			if($declaration['__type__'] == 'codeBehind') {
-				$className = $declaration['class'];
+			if($declaration->name == 'codeBehind') {
+				$className = $declaration->getAttribute('class');
 				if(class_exists($className)) {
 					$this->codeBehind = new $className($this->document);
 				} else {
@@ -205,6 +215,65 @@ class Renderer
 	}
 
 	/**
+	 * Sets a variable for replacement
+	 *
+	 * @param string $key The key
+	 * @param string $value The value
+	 * @memberOf Renderer
+	 * @method setVariable
+	 */
+	public function setVariable($key, $value) {
+		$this->variables[$key] = $value;
+	}
+
+	/**
+	 * Replaces global placeholders for the view
+	 *
+	 * @param string $text The text
+	 * @return string
+	 * @memberOf Renderer
+	 * @method replaceVariables
+	 */
+	public function replaceVariables($text) {
+		$search = array();
+		$replace = array();
+
+		foreach($this->variables as $key => $value) {
+			$search[] = '{' . $key . '}';
+			$replace[] = $value;
+		}
+
+		$text = str_replace($search, $replace, $text);
+		// special replacement for form variables
+		$text = preg_replace('#\{form:[a-zA-Z0-9_]+\}#i','', $text);
+
+		return $text;
+	}
+
+	/**
+	 * Updates the form references
+	 *
+	 * @param Request $request The request instance
+	 * @memberOf Renderer
+	 * @method updateFormReferences
+	 */
+	public function updateFormReferences($request) {
+		$forms = $this->document->getForms();
+		foreach ($forms as $formName => $form) {
+			foreach ($form as $inputName => $inputElm) {
+				$property = 'form_' . $formName . '_' . $inputName;
+				if(property_exists($this->codeBehind, $property)) {
+					if($inputElm->name == 'input'
+						|| $inputElm->name == 'textarea'
+						|| $inputElm->name == 'select') {
+						$this->codeBehind->{$property} = new Input($inputElm, $this, $request);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * The render process
 	 *
 	 * @return string|void
@@ -220,18 +289,7 @@ class Renderer
 		if($this->codeBehind) {
 			$request = new Request();
 			$response = new Response();
-			$forms = $this->document->getForms();
-			foreach ($forms as $formName => $form) {
-				foreach ($form as $inputName => $inputElm) {
-					$property = 'form_' . $formName . '_' . $inputName;
-					if(property_exists($this->codeBehind, $property)) {
-						if($inputElm->name == 'input'
-							|| $inputElm->name == 'textarea') {
-							$this->codeBehind->{$property} = new Input($inputElm, $this, $request);
-						}
-					}
-				}
-			}
+			$this->updateFormReferences($request);
 			if(isset($_REQUEST['__execute__'])) {
 				if(method_exists($this->codeBehind, $_REQUEST['__execute__'])) {
 					$result = call_user_func_array(array($this->codeBehind,$_REQUEST['__execute__']), array($this, $request, $response));
@@ -280,6 +338,6 @@ class Renderer
 		}
 		$result = $this->document->generateDoctype('DOCTYPE');
 		$result .= $rootNode->toXML();
-		return $result;
+		return $this->replaceVariables($result);
 	}
 }

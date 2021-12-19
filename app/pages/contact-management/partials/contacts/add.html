@@ -1,0 +1,41 @@
+<div class="content">
+	<h1>Add contact</h1>
+	<div id="success" hidden class="success">
+		The contact was successfully added.
+	</div>
+	<div id="error" hidden class="error">
+		The field prename, name, street, zipcode and city needs to be filled out.
+	</div>
+	<form method="post" name="form" action="{request_url}">
+		<label for="company">Company</label>
+		<input id="company" name="company" type="text" value="{form:company}" />
+		<label for="prename">Prename</label>
+		<input id="prename" name="prename" type="text" value="{form:prename}" required />
+		<label for="name">Name</label>
+		<input id="name" name="name" type="text" value="{form:name}" required />
+		<label for="street">Street</label>
+		<input id="street" name="street" type="text" value="{form:street}" required />
+		<label for="zipcode">Zipcode</label>
+		<input id="zipcode" name="zipcode" type="text" value="{form:zipcode}" required />
+		<label for="city">City</label>
+		<input id="city" name="city" type="text" value="{form:city}" required />
+		<label for="country">Country</label>
+		<?include page="contact-management/partials/country.html" name="country" ?>
+		<hr/>
+		<label for="phone">Phone</label>
+		<input id="phone" name="phone" type="text" value="{form:phone}" />
+		<label for="fax">Fax</label>
+		<input id="fax" name="fax" type="text" value="{form:fax}" />
+		<label for="notes">Notes</label>
+		<textarea name="notes" id="notes">{form:notes}</textarea>
+		<hr/>
+		<label for="contact_person">Contact person</label>
+		<input id="contact_person" name="contact_person" type="text" value="{form:contact_person}" />
+		<label for="contact_person_phone">Contact person phone</label>
+		<input id="contact_person_phone" name="contact_person_phone" type="text" value="{form:contact_person_phone}" />
+		<br/><br/>
+		<button class="button" type="submit">Create</button>
+		<a href="/contact-management/{nsName}/contacts" class="button">Back</a>
+		<?crsf-token ?>
+	</form>
+</div>

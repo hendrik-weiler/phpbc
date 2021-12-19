@@ -35,12 +35,13 @@
 	<div class="post-create-container">
 		<div style="display: flex; justify-content: space-between;">
 			<h4>Startsite - signed on as <span id="username"></span></h4>
-			<a id="logout" href="#">Logout</a>
+			<a id="logout" href="">Logout</a>
 		</div>
 		<form onsubmit="createPost(event)" name="app" action="{request_url}" method="post">
 			<textarea placeholder="Type in your message..." name="text" cols="30" rows="10"></textarea>
 			<button class="button" type="submit">Create post</button>
 			<br/><br/>
+			<?crsf-token ?>
 		</form>
 	</div>
 	<div id="posts" class="post-container"></div>

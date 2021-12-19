@@ -16,14 +16,15 @@ class Comment extends Node
 	/**
 	 * The constructor
 	 *
-	 * @param $content int The content of the node
+	 * @param int $content The content of the node
+	 * @param Document $document The document instance
 	 * @memberOf Comment
 	 * @method __construct
 	 * @constructor
 	 */
-	public function __construct($content)
+	public function __construct($content, $document)
 	{
-		parent::__construct('comment', array());
+		parent::__construct('comment', array(), $document);
 		$this->setContent($content);
 	}
 

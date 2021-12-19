@@ -1,0 +1,70 @@
+<?codeBehind class="\Controller\contactManagement\Register" ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <?include
+		page="contact-management/partials/head.html"
+		title="Contact management - Register"
+	?>
+  <script>
+    function ajax_namespaceIsUseable(result) {
+      let error = document.getElementById('error6');
+      error.setAttribute('hidden','');
+      if(!result) {
+        error.removeAttribute('hidden');
+      }
+    }
+    function ajax_usernameIsUseable(result) {
+      let error = document.getElementById('error7');
+      error.setAttribute('hidden','');
+      if(!result) {
+        error.removeAttribute('hidden');
+      }
+    }
+  </script>
+</head>
+<body class="center">
+<div class="container">
+  <div style="text-align: center">
+    <img width="100px" src="/@/contact-management/logo.svg"/><br/>
+    <strong>Contact management</strong>
+  </div>
+  <p><strong>To register fill out this form and press "register"</strong></p>
+  <form method="post" name="register" action="{request_url}">
+    <label id="namespaceLabel" for="namespace"></label>
+    <input id="namespace" name="namespace" type="text" value="{form:namespace}" />
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text" value="{form:username}" />
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password"/>
+    <label for="repeat_password">Repeat password</label>
+    <input id="repeat_password" name="repeat_password" type="password"/>
+    <br/><br/>
+    <button class="button" type="submit" name="submit">Register</button>
+    <a class="button" href="/contact-management/">Back</a>
+    <div id="error" hidden class="error">
+      The passwords needs to be the same.
+    </div>
+    <div id="error2" hidden class="error">
+      The username already exists.
+    </div>
+    <div id="error3" hidden class="error">
+      The username cant be empty.
+    </div>
+    <div id="error7" hidden class="error">
+      The username is already used.
+    </div>
+    <div id="error4" hidden class="error">
+      The passwords cant be empty.
+    </div>
+    <div id="error5" hidden class="error">
+      The name cant be empty.
+    </div>
+    <div id="error6" hidden class="error">
+      The name cant be used. Already in use.
+    </div>
+    <?crsf-token ?>
+  </form>
+</div>
+</body>
+</html>

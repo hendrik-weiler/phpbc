@@ -49,7 +49,7 @@ class CodeBehind
 	 * @memberOf CodeBehind
 	 * @method get_execute
 	 */
-	public function get_execute($renderer,$request,$response) {}
+	public function get_execute($renderer, Request $request, Response $response) {}
 
 	/**
 	 * Gets called when a post request occurred
@@ -60,5 +60,5 @@ class CodeBehind
 	 * @memberOf CodeBehind
 	 * @method post_execute
 	 */
-	public function post_execute($renderer,$request,$response) {}
+	public function post_execute($renderer, Request $request, Response $response) {}
 }

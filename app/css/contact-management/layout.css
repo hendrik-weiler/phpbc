@@ -1,0 +1,86 @@
+.layout {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: auto;
+    flex-flow: column;
+}
+
+.layout .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid var(--middlegray);
+}
+
+.layout .header * {
+    vertical-align: middle;
+}
+
+.layout .footer {
+    padding: 10px 0;
+}
+
+.layout .content-container {
+    display: flex;
+    overflow: auto;
+    flex-grow: 1;
+}
+
+.layout .content-container .navigation {
+    width: 200px;
+    background: var(--lightgray);
+}
+
+.layout .content-container .navigation a {
+    display: block;
+    color: var(--darkgray);
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.layout .content-container .navigation a:hover,
+.layout .content-container .navigation a.active {
+    background: var(--primary);
+}
+
+.layout .content-container .content {
+    width: calc(100% - 200px);
+    padding: 15px;
+}
+
+.layout .content-container .content,
+.layout .content-container .navigation {
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.headline {
+    display: flex;
+    align-items: center;
+}
+
+.headline a.button {
+    margin-left: 10px;
+}
+
+.table {
+    width: 100%;
+    border-spacing: 0;
+}
+
+.table thead th {
+    background: var(--lightgray);
+    text-align: left;
+    border-bottom: 1px solid var(--middlegray);
+    padding: 10px;
+}
+
+.table tbody td {
+    padding: 10px;
+}
+
+.table tbody .no-entries {
+    padding: 15px;
+    text-align: center;
+}

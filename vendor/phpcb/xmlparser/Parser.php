@@ -4,6 +4,7 @@ namespace xmlparser;
 
 require_once 'Node.php';
 require_once 'Comment.php';
+require_once 'Declaration.php';
 
 /**
  * Parses tokens from the lexer
@@ -191,24 +192,27 @@ class Parser
 	 * @memberOf Parser
 	 * @method declaration
 	 */
-	public function declaration() {
+	public function declaration(&$children, &$parent=null) {
 
 		$name = $this->current_token->value;
-		$index = count($this->declarations);
-		$this->declarations[] = array('__type__' => $name);
+		$attributes = array();
 		$this->eat(Type::ID);
 
 		while ($this->current_token->type != Type::DECLARATION_END) {
 
 			$var = $this->attribute();
-			$this->declarations[$index][$var['key']] = $var['value'];
+			$attributes[$var['key']] = $var['value'];
 
 		}
 
+		$decl = new Declaration($name, $attributes,$this->document);
+		$decl->parentNode = $parent;
+		$children[] = $decl;
+		$this->declarations[] = $decl;
+
 		if(is_callable($this->declarationCallbable)) {
 			call_user_func($this->declarationCallbable,
-				$name,
-				$this->declarations[$index],
+				$decl,
 				$this);
 		}
 
@@ -241,7 +245,7 @@ class Parser
 		if($this->current_token->type == Type::TAG_SLASH_END) {
 			$node = new Node($tagName, $attributes, $this->document);
 			$node->parentNode = $parent;
-			$children[$node->id] = $node;
+			$children[] = $node;
 			$this->eat(Type::TAG_SLASH_END);
 		} else {
 			$this->eat(Type::TAG_END);
@@ -265,14 +269,14 @@ class Parser
 				}
 				if($this->current_token->type == Type::COMMENT_START) {
 					$this->eat(Type::COMMENT_START);
-					$comment = new Comment($this->current_token->value);
+					$comment = new Comment($this->current_token->value, $this->document);
 					$node->children[$comment->id] = $comment;
 					$this->eat(Type::VALUE);
 					$this->eat(Type::COMMENT_END);
 				}
 				if($this->current_token->type == Type::DECLARATION_START) {
 					$this->eat(Type::DECLARATION_START);
-					$this->declaration();
+					$this->declaration($node->children, $node);
 				}
 			}
 			$children[$node->id] = $node;
@@ -353,7 +357,7 @@ class Parser
 			$token = $this->current_token;
 			if($token->type == Type::DECLARATION_START) {
 				$this->eat(Type::DECLARATION_START);
-				$this->declaration();
+				$this->declaration($this->nodes);
 			}
 			if($token->type == Type::DOCTYPE_START) {
 				$this->eat(Type::DOCTYPE_START);

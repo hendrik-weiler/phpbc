@@ -46,6 +46,12 @@ class Links extends Controller
 	public function post_execute($renderer, $request, $response)
 	{
 		$this->get_execute($renderer, $request, $response);
+
+		if(!$request->checkCRSFToken()) {
+			$response->redirect('/shortlink/links/' . $request->getUrlSegment(2));
+			return;
+		}
+
 		if($this->form_generate_url->getValue() == '') {
 			$error = $renderer->document->getElementById('error');
 			$error->removeAttribute('hidden');

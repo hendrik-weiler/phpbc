@@ -12,11 +12,31 @@ class Register extends Controller
 
 	public function get_execute($renderer, $request, $response)
 	{
+		$username = $renderer->document->getElementById('username');
+		$username->addEventListener('ajaxChange', 'usernameIsUseable');
+	}
 
+	public function usernameIsUseable($renderer, $request, $response) {
+		$name = $request->getValue('value');
+		return $this->isUsernameUseable($name);
+	}
+
+	private function isUsernameUseable($name) {
+		$this->initDB();
+		$result = $this->queryDB('SELECT id FROM account WHERE username = "' . $this->escapeString($name) . '"');
+		$row = $result->fetchArray(SQLITE3_ASSOC);
+		return $row==false;
 	}
 
 	public function post_execute($renderer, $request, $response)
 	{
+		if(!$request->checkCRSFToken()) {
+			$response->redirect('/twitter/register.html');
+			return;
+		}
+
+		$this->get_execute($renderer, $request, $response);
+
 		$username = $this->form_register_username->getValue();
 		$password = $this->form_register_password->getValue();
 		$repeat_password = $this->form_register_repeat_password->getValue();

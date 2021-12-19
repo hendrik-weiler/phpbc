@@ -1,8 +1,10 @@
 <?php
 
-require_once 'parser/Document.php';
+require_once 'xmlparser/Document.php';
 
 use \xmlparser\Document as Document;
+
+define('APP_PATH','../../app/');
 
 $text = file_get_contents('test.xml');
 var_dump(htmlspecialchars($text));
@@ -17,13 +19,8 @@ $rootNode = $doc->parse();
 
 //var_dump($parser->declarations, $parser->nodes);
 
-$rootNode->appendChild(new \xmlparser\Node('test',array('id'=>'test'),$doc));
+$test = new \xmlparser\Node('test',array('id'=>'test'),$doc);
+$rootNode->appendChild($test);
 
 print '<pre>';
-print htmlspecialchars($rootNode->toXML());
-
-var_dump($doc->getDoctypes());
-
-$nodes =$doc->getElementsByTagName('head');
-$nodes[0]->parentNode->removeChild($nodes[0]);
 print htmlspecialchars($rootNode->toXML());

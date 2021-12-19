@@ -6,6 +6,15 @@
 		page="twitter/partials/head.html"
 		title="Twitter clone - Register"
 	?>
+	<script>
+        function ajax_usernameIsUseable(result) {
+            let error = document.getElementById('error7');
+            error.setAttribute('hidden','');
+            if(!result) {
+                error.removeAttribute('hidden');
+            }
+        }
+	</script>
 </head>
 <body class="center">
 <div class="container">
@@ -36,6 +45,10 @@
 		<div id="error4" hidden class="error">
 			The passwords cant be empty.
 		</div>
+		<div id="error7" hidden class="error">
+			The username is already used.
+		</div>
+		<?crsf-token ?>
 	</form>
 </div>
 </body>
