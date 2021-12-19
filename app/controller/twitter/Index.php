@@ -15,6 +15,11 @@ class Index extends Controller
 
 	public function post_execute($renderer, $request, $response)
 	{
+		if(!$request->checkCRSFToken()) {
+			$response->redirect('/twitter');
+			return;
+		}
+
 		$this->initDB();
 		$username = $this->escapeString($this->form_login_username->getValue());
 		$password = $this->escapeString($this->form_login_password->getValue());

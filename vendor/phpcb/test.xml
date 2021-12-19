@@ -1,9 +1,10 @@
+<?codeBehind class="index" ?>
 <!DOCTYPE html>
 <html>
     <head>
         <title></title>
     </head>
     <body>
-        test
+        <?include page="twitter/partials/head.html" ?>
     </body>
 </html>

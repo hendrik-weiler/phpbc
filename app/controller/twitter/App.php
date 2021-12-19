@@ -128,6 +128,11 @@ class App extends Controller
 	{
 		$this->get_execute($renderer,$request,$response);
 
+		if(!$request->checkCRSFToken()) {
+			$response->redirect('/twitter/app');
+			return;
+		}
+
 		$text = $this->form_app_text->getValue();
 		if(strlen($text) > 0) {
 			$res = $this->execDB('INSERT INTO post VALUES (null,' . $this->escapeString($this->user['id']) . ',"' . $this->escapeString($text) . '",0,' . time() . ')');

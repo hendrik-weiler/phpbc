@@ -13,6 +13,11 @@ class Index extends Controller
 
 	public function post_execute($renderer, $request, $response)
 	{
+		if(!$request->checkCRSFToken()) {
+			$response->redirect('/shortlink');
+			return;
+		}
+
 		if($this->form_generate_url->getValue() == '') {
 			$error = $renderer->document->getElementById('error');
 			$error->removeAttribute('hidden');

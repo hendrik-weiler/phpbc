@@ -2,6 +2,8 @@
 
 namespace renderer;
 
+use xmlparser\Document;
+
 /**
  * The request class
  *
@@ -53,5 +55,75 @@ class Request
 			$result = $segments[$index];
 		}
 		return $result;
+	}
+
+	/**
+	 * Validates a form
+	 *
+	 * Only support required fields at the moment
+	 *
+	 * @param Renderer $renderer The renderer instance
+	 * @param string $form_name The name of the form
+	 * @return bool
+	 * @memberOf Request
+	 * @method isFormValid
+	 */
+	public function isFormValid(Renderer $renderer, $form_name) {
+		$forms = $renderer->document->getForms();
+		if(isset($forms[$form_name])) {
+			foreach ($forms[$form_name] as $element) {
+				$name = $element->getAttribute('name');
+				$value = static::getValue($name);
+				$isRequired = $element->getAttribute('required');
+				if(!is_null($isRequired) && empty($value)) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			throw new \Exception('Form "' . $form_name . '" not found.');
+		}
+	}
+
+	/**
+	 * Empties a forms input fields
+	 *
+	 * @param Renderer $renderer The renderer instance
+	 * @param string $form_name The name of the form
+	 * @return bool
+	 * @memberOf Request
+	 * @method emptyForm
+	 */
+	public function emptyForm(Renderer $renderer, $form_name) {
+		$forms = $renderer->document->getForms();
+		if(isset($forms[$form_name])) {
+			foreach ($forms[$form_name] as $element) {
+				$name = $element->getAttribute('name');
+				if(isset($_REQUEST[$name])) {
+					$_REQUEST[$name] = '';
+					$renderer->setVariable('form:' . $name, '');
+				}
+			}
+			return true;
+		} else {
+			throw new \Exception('Form "' . $form_name . '" not found.');
+		}
+	}
+
+	/**
+	 * Checks the crsf token
+	 *
+	 * @return bool
+	 * @memberOf Request
+	 * @method checkCRSFToken
+	 */
+	public function checkCRSFToken() {
+		if(isset($_COOKIE['crsf-token'])) {
+			if(isset($_REQUEST['crsf-token'])) {
+				return $_COOKIE['crsf-token'] == $_REQUEST['crsf-token'];
+			}
+			return false;
+		}
+		return false;
 	}
 }

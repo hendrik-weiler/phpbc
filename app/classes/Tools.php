@@ -7,11 +7,11 @@ class Tools
 	}
 
 	public static function removeCookie($name) {
-		setcookie($name, null, -1);
+		setcookie($name, null, -1,'/');
 	}
 
 	public static function setCookie($name, $value) {
-		setcookie($name, $value, time()+(3600*12));
+		setcookie($name, $value, time()+(3600*12),$_SERVER['REQUEST_URI']);
 	}
 
 	public static function getCookie($name) {

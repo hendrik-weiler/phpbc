@@ -1,0 +1,28 @@
+<div class="content">
+	<h1>Your profile</h1>
+	<form method="post" name="profile" action="{request_url}">
+		<label for="username">Username</label>
+		<input id="username" name="username" disabled type="text"/>
+		<label for="old_password">Old Password</label>
+		<input id="old_password" name="old_password" type="password"/>
+		<label for="new_password">New Password</label>
+		<input id="new_password" name="new_password" type="password"/>
+		<label for="new_password_repeat">Repeat new password</label>
+		<input id="new_password_repeat" name="new_password_repeat" type="password"/>
+		<br/><br/>
+		<button class="button" type="submit">Change password</button>
+		<div id="error" hidden class="error">
+			The old password is wrong.
+		</div>
+		<div id="error3" hidden class="error">
+			The new passwords needs to be filled out.
+		</div>
+		<div id="error2" hidden class="error">
+			The new passwords needs to be the same.
+		</div>
+		<div id="success" hidden class="success">
+			The password was changed successfully.
+		</div>
+		<?crsf-token ?>
+	</form>
+</div>

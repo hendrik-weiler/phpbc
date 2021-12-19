@@ -89,9 +89,8 @@ class Document
 	 * @var $forms
 	 * @type array
 	 * @memberOf Document
-	 * @private
 	 */
-	private $forms = array();
+	public $forms = array();
 
 	/**
 	 * @param $text string The xml to parse
@@ -124,22 +123,28 @@ class Document
 	/**
 	 * Gets called when a declaration is in the text
 	 *
-	 * @param string $name The name
-	 * @param array $attributes The attributes
+	 * @param Declaration $declaration The declaration
 	 * @param Parser $parser The parser instance
 	 * @memberOf Document
 	 * @method declarationCall
 	 */
-	public function declarationCall($name, $attributes, $parser) {
-		if($name == 'include') {
-			if(isset($attributes['page'])) {
-				$pagePath = APP_PATH . 'pages/' . $attributes['page'];
+	public function declarationCall(Declaration $declaration, $parser) {
+
+		if($declaration->name == 'crsf-token') {
+			$token = time() . '-' . uniqid();
+			setcookie('crsf-token', $token, time()+(3600*12),$_SERVER['REQUEST_URI']);
+			$parser->lexer->insertText('<input type="hidden" value="' . $token . '" name="crsf-token" />');
+		}
+		if($declaration->name == 'include') {
+			if(!is_null($declaration->getAttribute('page'))) {
+				$pagePath = APP_PATH . 'pages/' . $declaration->getAttribute('page');
 				if(file_exists($pagePath)) {
 					$html = file_get_contents($pagePath);
-					foreach ($attributes as $key => $value) {
+					foreach ($declaration->getAttributes() as $key => $value) {
 						$html = str_replace('{' . $key . '}',$value, $html);
 					}
 					$parser->lexer->insertText($html);
+					$declaration->parentNode->removeChild($declaration);
 				} else {
 					$parser->error('Could not find page in "' . $pagePath . '"');
 				}
@@ -147,6 +152,7 @@ class Document
 				$parser->error('The include delcaration needs a page attribute.');
 			}
 		}
+
 	}
 
 	/**
@@ -168,11 +174,12 @@ class Document
 	/**
 	 * Indexes from a node
 	 *
-	 * @param $node Node The node
+	 * @param Node $node The node
 	 * @method indexNodes
 	 * @memberOf Document
 	 */
-	public function indexNodes($node) {
+	public function indexNodes(&$node) {
+		$node->document = $this;
 		if($id = $node->getAttribute('id')) {
 			$this->ids[$id] = $node;
 		}
@@ -206,6 +213,7 @@ class Document
 		}
 		$this->tags[$tagName][] = $node;
 		foreach($node->children as $child) {
+			$child->document = $this;
 			$this->indexNodes($child);
 		}
 	}
@@ -219,6 +227,7 @@ class Document
 	public function reIndexNodes() {
 		$this->ids = array();
 		$this->tags = array();
+		$this->forms = array();
 		$this->indexNodes($this->rootNode);
 	}
 
@@ -355,8 +364,10 @@ class Document
 		$this->doctypes = $this->parser->doctypes;
 		if(count($this->parser->nodes) > 0) {
 			foreach($this->parser->nodes as $node) {
-				$this->rootNode = $node;
-				break;
+				if(!is_a($node,'xmlparser\Declaration')) {
+					$this->rootNode = $node;
+					break;
+				}
 			}
 		}
 		$this->indexNodes($this->rootNode);

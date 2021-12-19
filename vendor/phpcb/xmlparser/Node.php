@@ -73,7 +73,7 @@ class Node
 	 * @type Document
 	 * @memberOf Node
 	 */
-	protected $document;
+	public $document;
 
 	/**
 	 * The constructor
@@ -133,6 +133,7 @@ class Node
 	 * Available:
 	 * - click
 	 * - ajaxClick
+	 * - ajaxChange
 	 *
 	 * @example addEventClick
 	 * @example addEventAjaxClick
@@ -148,17 +149,8 @@ class Node
 			if($key == $name) continue;
 			$attributes[] = $key . '=' . urlencode($value);
 		}
-		switch ($name) {
-			case 'click':
-				if($this->name == 'a') {
-					$this->attributes['href'] = '{request_url}';
-				}
-				$this->setAttribute('onclick',"javascript:event.preventDefault();__clickCall('" . $funcName . "','{request_url}', this);return false");
-				break;
-			case 'ajaxClick':
-				$this->setAttribute('onclick',"javascript:event.preventDefault();__ajaxClickCall('" . $funcName . "','{request_url}', this);return false;");
-				break;
-		}
+		$this->setAttribute('phpcb-event',$name);
+		$this->setAttribute('phpcb-func', $funcName);
 	}
 
 	/**
@@ -246,7 +238,7 @@ class Node
 	public function appendChild(&$node) {
 		if($node instanceof Node) {
 			$node->parentNode = $this;
-			$this->children[$node->id] = $node;
+			$this->children[] = $node;
 			$this->document->reIndexNodes();
 		}
 	}
@@ -257,10 +249,41 @@ class Node
 	 * @param Node $node The node
 	 * @memberOf Node
 	 * @method removeChild
+	 * @return bool
 	 */
 	public function removeChild(&$node) {
-		if(isset($this->children[$node->id])) {
-			unset($this->children[$node->id]);
+		foreach($this->children as $index => $child) {
+			if($child->id == $node->id) {
+				unset($this->children[$index]);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Replaces a child with another node
+	 *
+	 * @memberOf Node
+	 * @method replaceChild
+	 * @param Node $newNode The node to replace
+	 * @param Node $oldNode The old node
+	 * @return bool
+	 */
+	public function replaceChild(&$newNode,&$oldNode) {
+		// get index
+		$childIndex = -1;
+		foreach($this->children as $index => $child) {
+			if($child->id == $oldNode->id) {
+				$childIndex = $index;
+				break;
+			}
+		}
+		if($childIndex>-1) {
+			$this->children[$childIndex] = $newNode;
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -295,9 +318,10 @@ class Node
 			$result .= ' ';
 		}
 		$result .= $this->generateAttributes();
-		if(count($this->children) == 0 && strlen($this->content) == 0
-			&& $this->name != 'script'
-			&& $this->name != 'textarea') {
+		if(in_array($this->name,array(
+			'area','base','br','col','command','embed',
+			'hr','img','input','keygen','link','meta',
+			'param','source','track','wbr'))) {
 			$result .= ' />'. PHP_EOL;
 		} else {
 			$result .= '>';

@@ -144,6 +144,24 @@ class Server {
 	}
 
 	/**
+	 * Recursively search for a pattern and returns the files
+	 *
+	 * @param string $pattern The glob pattern
+	 * @param int $flags The flags
+	 * @return array|false
+	 * @memberOf Server
+	 * @method rglob
+	 * @private
+	 */
+	private function rglob($pattern, $flags = 0) {
+		$files = glob($pattern, $flags);
+		foreach (glob(dirname($pattern).'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $dir) {
+			$files = array_merge($files, $this->rglob($dir.'/'.basename($pattern), $flags));
+		}
+		return $files;
+	}
+
+	/**
 	 * Includes the classes files
 	 *
 	 * @memberOf Server
@@ -151,7 +169,7 @@ class Server {
 	 */
 	public function includeClasses() {
 		$path = getcwd() . $this->classesPath;
-		$files = array_merge(glob($path.'/**/*.php'),glob($path.'/*.php'));
+		$files = $this->rglob($path.'/*.php');
 		foreach ($files as $file) {
 			require_once $file;
 		}
@@ -165,7 +183,7 @@ class Server {
 	 */
 	public function includeControllers() {
 		$path = getcwd() . $this->controllerPath;
-		$files = array_merge(glob($path.'/**/*.php'),glob($path.'/*.php'));
+		$files = $this->rglob($path.'/*.php');
 		foreach ($files as $file) {
 			require_once $file;
 		}
@@ -180,6 +198,19 @@ class Server {
 	 * @method servePageIfExist
 	 */
 	public function servePageIfExist() {
+		// check for routes
+		foreach ($this->routes as $match => $path) {
+			if(preg_match('#' . $match . '#', $this->path)) {
+				$this->path = $path;
+				if(preg_match('#^:#',$this->path)) {
+					$rpl = str_replace(':','',$this->path);
+					\renderer\Renderer::runClass($rpl);
+					exit();
+				}
+				break;
+			}
+		}
+		// if there was not route found search for the html page
 		$path = getcwd() . $this->pagePath .$this->path;
 		if($this->path[strlen($this->path)-1] == '/') {
 			$path .= 'index';
@@ -192,47 +223,37 @@ class Server {
 		if(file_exists($path)) {
 			$text = file_get_contents($path);
 			$renderer = new \renderer\Renderer($text);
+			$this->addVariables($renderer);
 			$renderer->injectHTML(function($document) {
 				$head = $document->getElementsByTagName('head');
 				if(count($head) > 0) {
+					$script = $document->createElement('script');
+					$script->setContent('var __request_url = "{request_url}";');
+					$head[0]->appendChild($script);
 					$script = $document->createElement('script');
 					$script->setAttribute('src', '/@/core/core.js');
 					$head[0]->appendChild($script);
 				}
 			});
-			return $this->replacePlaceholders($renderer->render());
+			return $renderer->render();
 		}
 		return false;
 	}
 
 	/**
-	 * Replaces global placeholders for the view
+	 * Adds global variables to the renderer
 	 *
-	 * @param string $text The text
-	 * @return string
 	 * @memberOf Server
-	 * @method replacePlaceholders
+	 * @param Renderer $renderer The renderer instance
+	 * @method addVariables
 	 */
-	public function replacePlaceholders($text) {
-		$search = array(
-			'{request_url}'
-		);
-		$replace = array(
-			$this->originalPath
-		);
+	public function addVariables(Renderer $renderer) {
+
+		$renderer->setVariable('request_url', $this->originalPath);
 
 		foreach ($_REQUEST as $key => $value) {
-			$search[] = '{form:' . $key. '}';
+			$renderer->setVariable('form:' . $key, $value);
 		}
-
-		foreach ($_REQUEST as $key => $value) {
-			$replace[] = $value;
-		}
-
-		$text = str_replace($search, $replace, $text);
-		$text = preg_replace('#\{form:[a-zA-Z0-9_]+\}#i','', $text);
-
-		return $text;
 	}
 
 	/**
@@ -315,18 +336,6 @@ class Server {
 		$this->includeClasses();
 		$this->includeControllers();
 		$fullPath = getcwd() . $this->path;
-		// check for routes
-		foreach ($this->routes as $match => $path) {
-			if(preg_match('#' . $match . '#', $this->path)) {
-				$this->path = $path;
-				if(preg_match('#^:#',$this->path)) {
-					$rpl = str_replace(':','',$this->path);
-					\renderer\Renderer::runClass($rpl);
-					return;
-				}
-				break;
-			}
-		}
 		if($content = $this->serveRessourceIfExist()) {
 			print $content;
 		} else if($content = $this->servePageIfExist()) {
