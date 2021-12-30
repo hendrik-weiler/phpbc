@@ -12,6 +12,13 @@ Version: preview
 - renderer
 - shortlink generator example
 - simple twitter clone example
+- simple contact management example
+
+#### Requirements
+
+- PHP 7.2 and above
+- Apache with mod_rewrite
+- Samples requires the sqlite extension enabled on php
 
 #### css parser
 
