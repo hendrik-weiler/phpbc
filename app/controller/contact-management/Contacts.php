@@ -21,7 +21,7 @@ class Contacts extends App
 		$entries = $renderer->document->getElementById('entries');
 
 		$result = $this->queryDB('SELECT id,company,prename,name,zipcode,city
-       		FROM contact t1 ORDER BY created desc;');
+       		FROM contact t1 WHERE namespace_id = ' . $this->escapeString($this->namespace['id']) . ' ORDER BY created desc;');
 		$counter = 0;
 		while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
 			$counter++;

@@ -62,7 +62,7 @@ class Index extends Controller
 
 			$sid = \Tools::generateSessionId();
 			$this->execDB('UPDATE account SET session = "' . $sid . '" WHERE id=' . $row['id']);
-			\Tools::setCookie('sid', $sid);
+			\Tools::setCookie('sid', $sid, '/contact-management/' . $nsName);
 			$response->redirect('/contact-management/' . $nsName . '/contacts');
 		}
 	}

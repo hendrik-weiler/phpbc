@@ -258,11 +258,17 @@ class Parser
 
 			while (in_array($this->current_token->type, array(Type::TAG_START, Type::COMMENT_START, Type::DECLARATION_START))) {
 				if($this->current_token->type == Type::TAG_START) {
+					$countStart = count($node->children);
 					$this->node($node->children, $node);
+					$countEnd = count($node->children);
+					$nodesAddedCount = $countEnd - $countStart;
+					for($i=0; $i < $nodesAddedCount; $i++) {
+						$node->appendContent('{{__node__}}');
+					}
 					if($this->current_token->type == Type::VALUE) {
 						$value = ($this->current_token->value);
 						if(strlen(trim($value)) > 0) {
-							$node->appendContent('{{__node__}}' . $value);
+							$node->appendContent($value);
 						}
 						$this->eat(Type::VALUE);
 					}
@@ -270,12 +276,14 @@ class Parser
 				if($this->current_token->type == Type::COMMENT_START) {
 					$this->eat(Type::COMMENT_START);
 					$comment = new Comment($this->current_token->value, $this->document);
-					$node->children[$comment->id] = $comment;
+					$node->children[] = $comment;
+					$node->appendContent('{{__node__}}');
 					$this->eat(Type::VALUE);
 					$this->eat(Type::COMMENT_END);
 				}
 				if($this->current_token->type == Type::DECLARATION_START) {
 					$this->eat(Type::DECLARATION_START);
+					$node->appendContent('{{__node__}}');
 					$this->declaration($node->children, $node);
 				}
 			}
