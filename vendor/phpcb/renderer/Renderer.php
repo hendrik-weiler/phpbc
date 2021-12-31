@@ -283,7 +283,9 @@ class Renderer
 	 */
 	public function render() {
 		$rootNode = $this->document->parse();
-		call_user_func($this->injectHTMLCallback, $this->document);
+		if(is_callable($this->injectHTMLCallback)) {
+			call_user_func($this->injectHTMLCallback, $this->document);
+		}
 		$this->checkDeclarations();
 		$this->initComponents();
 		if($this->codeBehind) {

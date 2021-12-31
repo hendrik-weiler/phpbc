@@ -33,8 +33,8 @@ class Index extends Controller
 		} else {
 			$sid = \Tools::generateSessionId();
 			$this->execDB('UPDATE account SET session = "' . $sid . '" WHERE id=' . $row['id']);
-			\Tools::setCookie('sid', $sid);
 			$response->redirect('/twitter/app');
+			\Tools::setCookie('sid', $sid);
 		}
 	}
 

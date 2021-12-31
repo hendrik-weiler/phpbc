@@ -48,7 +48,7 @@ class Links extends Controller
 		$this->get_execute($renderer, $request, $response);
 
 		if(!$request->checkCRSFToken()) {
-			$response->redirect('/shortlink/links/' . $request->getUrlSegment(2));
+			$response->redirect('/shortlink/links/' . $request->getUrlSegment(3));
 			return;
 		}
 

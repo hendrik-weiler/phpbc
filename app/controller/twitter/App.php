@@ -92,7 +92,7 @@ class App extends Controller
 					<div class="tweet-body">
 						<div class="tweet-retweet">
 							<div class="tweet-head">' . $retweet['username'] . ', <i>created at ' . date('Y/d/m H:i',$retweet['created']) . '</i></div>	
-							<div class="tweet-body">' . $retweet['message_text'] . '</div>		
+							<div class="tweet-body">' . nl2br($retweet['message_text']) . '</div>		
 						</div>
 					</div>
 					<div class="tweet-stats">
