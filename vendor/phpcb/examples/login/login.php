@@ -5,8 +5,8 @@ require_once RENDERER_PATH . './renderer/Renderer.php';
 
 use renderer\Renderer as Renderer;
 
-//print '<pre>';
-//$text = file_get_contents('login.html');
+print '<pre>';
+$text = file_get_contents('login.html');
 /*
 $text = "<div id='test'>1<br/><meta/><br/>2<br/><br/>3<br/><br/>4</div>";
 $lexer = new \xmlparser\Lexer($text);
@@ -18,7 +18,7 @@ while($token->type != 'EOF') {
 }
 */
 
-$parser = new \xmlparser\Document("<div id='test'>1<br/><br/>2<br/><br/>3<br/><br/>4</div>");
+$parser = new \xmlparser\Document($text);
 $node = $parser->parse();
 
 $div = $parser->getElementById('test');

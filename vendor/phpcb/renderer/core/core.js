@@ -69,20 +69,52 @@ async function __ajaxCall(method,path,node) {
     }
 }
 
+/**
+ * Translates nodes
+ *
+ */
+function __translate() {
+    var nodes = document.querySelectorAll('[data-translate]'),
+        i = 0,
+        node,
+        value;
+    for(i; i < nodes.length; ++i) {
+        node = nodes[i];
+        if(node.getAttribute('placeholder')!=null) {
+            value = node.getAttribute('placeholder');
+            if(typeof __translations[value] != 'undefined') {
+                node.setAttribute('placeholder', __translations[value]);
+            }
+        }
+    }
+}
+
 // init
 window.addEventListener('load', function () {
    var  init = document.querySelectorAll('[data-init]'),
         evts = document.querySelectorAll('[phpcb-event]'),
+        actions = document.querySelectorAll('[phpcb-action]'),
         evtElm,
         eventName,
         funcName,
+        actionElm,
         i = 0;
+
+   __translate();
 
     // autofill values of form inputs
     for(i; i < init.length; ++i) {
         if(init[i].dataset.init.length > 0) {
             init[i].value = init[i].dataset.init;
         }
+    }
+
+    for(i=0; i < actions.length; ++i) {
+        actionElm = actions[i];
+        actionElm.href = __request_url + '?__action__='
+            + actionElm.getAttribute('phpcb-action')
+            + '&param=' + actionElm.getAttribute('phpcb-param')
+            + '&redir=' + location.href;
     }
 
     // set events

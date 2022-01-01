@@ -1,31 +1,32 @@
 <?codeBehind class="\Controller\shortlink\Index" ?>
+<?translation file="shortlink.po" context="login" default-lang="en" cookie-name="lang" cookie-path="/shortlink" ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title><?__ text="Login" ?></title>
 	<?include
 		page="shortlink/partials/head.html"
-		title="Login"
 	?>
 </head>
 <body>
 	<div class="container">
-		<h1>Link shortener</h1>
-		<p>Fill in an url and get a link back!</p>
+		<h1><?__ text="Link shortener" ?></h1>
+		<p><?__ text="Fill in an url and get a link back!" ?></p>
 		<form name="generate" method="post" action="{request_url}">
-			<input class="input" placeholder="Enter your url..." type="text" name="url"/>
+			<input class="input" data-translate placeholder="Enter your url..." type="text" name="url"/>
 			<div class="centering">
-				<button class="button" type="submit">Create</button>
+				<button class="button" type="submit"><?__ text="Create" ?></button>
 			</div>
 			<div id="error" hidden class="error">
-				The url cannot be empty.
+				<?__ text="The url cannot be empty." ?>
 			</div>
 			<div id="error2" hidden class="error">
-				A valid url is needed.
+				<?__ text="A valid url is needed." ?>
 			</div>
 			<?crsf-token ?>
 		</form>
 		<div class="line"></div>
-		<p class="footer">2021 (c) hendrikweiler.com</p>
+		<p class="footer">2021 (c) hendrikweiler.com | <?langSwitch text="English" lang="en" ?><span>&nbsp;</span><?langSwitch text="Deutsch" lang="de" ?></p>
 	</div>
 </body>
 </html>

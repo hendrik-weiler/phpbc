@@ -38,6 +38,16 @@ body {
     text-align: center;
 }
 
+.footer a {
+    color: var(--darkgray);
+    text-decoration: none;
+}
+
+.footer a:hover,
+.footer a.active {
+    color: var(--primary);
+}
+
 .centering {
     margin: 15px 0;
     display: flex;

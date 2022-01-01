@@ -1,42 +1,44 @@
 <?codeBehind class="\Controller\shortlink\Links" ?>
+<?translation file="shortlink.po" default-lang="en" cookie-name="lang" cookie-path="/shortlink" ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title><?__ text="All links" ?></title>
 	<?include
 		page="shortlink/partials/head.html"
-		title="All links"
 	?>
+
 </head>
 <body>
 	<div class="container">
-		<h4>Add a new link</h4>
+		<h4><?__ text="Add a new link" ?></h4>
 		<form name="generate" method="post" action="{request_url}">
-			<input class="input" placeholder="Enter your url..." type="text" name="url"/>
+			<input class="input" data-translate placeholder="Enter your url..." type="text" name="url"/>
 			<div class="centering">
-				<button class="button" type="submit">Add new link</button>
+				<button class="button" type="submit"><?__ text="Add new link" ?></button>
 			</div>
 			<div id="error" hidden class="error">
-				The url cannot be empty.
+				<?__ text="The url cannot be empty." ?>
 			</div>
 			<div id="error2" hidden class="error">
-				A valid url is needed.
+				<?__ text="A valid url is needed." ?>
 			</div>
 			<?crsf-token ?>
 		</form>
-		<h4>Your links</h4>
-		<p>With this link you can have an overview of all your links.</p>
+		<h4><?__ text="Your links" ?></h4>
+		<p><?__ text="With this link you can have an overview of all your links." ?></p>
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Link</th>
-					<th>Counter</th>
-					<th style="width: 150px">Creation date</th>
+					<th><?__ text="Link" ?></th>
+					<th><?__ text="Visiter count" ?></th>
+					<th style="width: 150px"><?__ text="Creation date" ?></th>
 				</tr>
 			</thead>
 			<tbody id="links"></tbody>
 		</table>
 		<div class="line"></div>
-		<p class="footer">2021 (c) hendrikweiler.com</p>
+		<p class="footer">2021 (c) hendrikweiler.com | <?langSwitch text="English" lang="en" ?><span>&nbsp;</span><?langSwitch text="Deutsch" lang="de" ?></p>
 	</div>
 </body>
 </html>

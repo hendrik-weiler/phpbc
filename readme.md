@@ -9,6 +9,7 @@ Version: preview
 
 - css parser
 - xml parser
+- po file parser
 - renderer
 - shortlink generator example
 - simple twitter clone example
@@ -33,6 +34,16 @@ This doenst work:
 
 This works:
 ```<link rel="stylesheet" href="x"/>```
+
+#### po file parser
+
+###### Features:
+- simple one line msgid, msgstr
+ - multiline msgid, msgstr
+ - collects comments, comments references, comments flags, comments extracted in a translation
+ - contexts
+###### Missing features:
+- plural definitions
 
 #### How to add a code behind class?
 
