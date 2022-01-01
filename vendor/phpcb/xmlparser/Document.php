@@ -151,11 +151,21 @@ class Document
 							break;
 						}
 					}
-					if(!is_null($translation_decl)
-						&& !is_null($translation_decl->getAttribute('cookie-name'))
-						&& isset($_COOKIE[$translation_decl->getAttribute('cookie-name')])
-						&& $_COOKIE[$translation_decl->getAttribute('cookie-name')] == $declaration->getAttribute('lang')) {
-						$active = ' class="active" ';
+					if(!is_null($translation_decl)) {
+						$defLang = $translation_decl->getAttribute('default-lang');
+						$cookieName = $translation_decl->getAttribute('cookie-name');
+						if(!is_null($defLang)
+							&& !isset($_COOKIE[$cookieName])
+							&& $translation_decl->getAttribute('default-lang') == $declaration->getAttribute('lang')) {
+							$active = ' class="active" ';
+						}
+						if(!is_null($cookieName)
+							&& isset($_COOKIE[$cookieName])
+							&& $_COOKIE[$cookieName] == $declaration->getAttribute('lang')) {
+							$active = ' class="active" ';
+						} else {
+
+						}
 					}
 					$parser->lexer->insertText('<a 
 						' . $active . '
