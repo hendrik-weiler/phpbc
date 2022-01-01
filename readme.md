@@ -35,6 +35,16 @@ This doenst work:
 This works:
 ```<link rel="stylesheet" href="x"/>```
 
+#### po file parser
+
+###### Features:
+- simple one line msgid, msgstr
+ - multiline msgid, msgstr
+ - collects comments, comments references, comments flags, comments extracted in a translation
+ - contexts
+###### Missing features:
+- plural definitions
+
 #### How to add a code behind class?
 
 In the html page you place for example

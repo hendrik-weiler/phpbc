@@ -142,7 +142,23 @@ class Document
 		if($declaration->name == 'langSwitch') {
 			if(!is_null($declaration->getAttribute('text'))) {
 				if(!is_null($declaration->getAttribute('lang'))) {
+					$active = '';
+
+					$translation_decl = null;
+					foreach($this->declarations as $decl) {
+						if($decl->name == 'translation') {
+							$translation_decl = $decl;
+							break;
+						}
+					}
+					if(!is_null($translation_decl)
+						&& !is_null($translation_decl->getAttribute('cookie-name'))
+						&& isset($_COOKIE[$translation_decl->getAttribute('cookie-name')])
+						&& $_COOKIE[$translation_decl->getAttribute('cookie-name')] == $declaration->getAttribute('lang')) {
+						$active = ' class="active" ';
+					}
 					$parser->lexer->insertText('<a 
+						' . $active . '
 						phpcb-action="langSwitch" 
 						phpcb-param="' . $declaration->getAttribute('lang') . '" href="#">' . $declaration->getAttribute('text') . '</a>');
 				} else {
@@ -226,6 +242,7 @@ class Document
 			}
 		}
 
+		$this->declarations[] = $declaration;
 	}
 
 	/**
@@ -432,8 +449,8 @@ class Document
 	 * @method parse
 	 */
 	public function parse() {
+		$this->declarations = array();
 		$this->parser->parse();
-		$this->declarations = $this->parser->declarations;
 		$this->doctypes = $this->parser->doctypes;
 		if(count($this->parser->nodes) > 0) {
 			foreach($this->parser->nodes as $node) {
