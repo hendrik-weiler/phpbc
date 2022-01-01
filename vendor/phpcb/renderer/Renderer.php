@@ -332,7 +332,7 @@ class Renderer
 			}
 		}
 		if($this->codeBehind) {
-			$request = new Request();
+			$request = new Request($this->document);
 			$response = new Response();
 			$this->updateFormReferences($request);
 			if(isset($_REQUEST['__execute__'])) {
@@ -355,7 +355,7 @@ class Renderer
 							print 'invalid call';
 						} else {
 							if(method_exists($this->codeBehind,$inputJSON['method'])) {
-								$request = new AjaxRequest();
+								$request = new AjaxRequest($this->document);
 								$request->fillValues($inputJSON['params']);
 								$response = new AjaxResponse($inputJSON['method']);
 								$result = call_user_func_array(array($this->codeBehind, $inputJSON['method']), array($this, $request, $response));
