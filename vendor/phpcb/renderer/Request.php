@@ -15,6 +15,48 @@ use xmlparser\Document;
 class Request
 {
 	/**
+	 * Returns the current language
+	 *
+	 * @var $currentLanguage
+	 * @type string
+	 * @memberOf Request
+	 */
+	public $currentLanguage = '';
+
+	/**
+	 * Initializes the request class
+	 *
+	 * @param Document $document The document instance
+	 * @constructor
+	 * @memberOf Request
+	 * @method __construct
+	 */
+	public function __construct(Document $document)
+	{
+		$translation_decl = null;
+		foreach ($document->getDeclarations() as $declaration) {
+			if($declaration->name == 'translation') {
+				$translation_decl = $declaration;
+				break;
+			}
+		}
+
+		if(!is_null($translation_decl)) {
+			$defLang = $translation_decl->getAttribute('default-lang');
+			$cookieName = $translation_decl->getAttribute('cookie-name');
+			if(!is_null($defLang)
+				&& !isset($_COOKIE[$cookieName])) {
+				$this->currentLanguage = $defLang;
+			}
+			if(!is_null($cookieName)
+				&& isset($_COOKIE[$cookieName])) {
+				$this->currentLanguage = $_COOKIE[$cookieName];
+			}
+
+		}
+	}
+
+	/**
 	 * Gets a value from post/get request
 	 *
 	 * @param string $name The name

@@ -22,17 +22,24 @@ class Links extends Controller
 			$this->invalid();
 		}
 
+
 		$result = $this->queryDB('SELECT counter,uid,link,created FROM link WHERE lgroup_id IN (SELECT id FROM linkGroup WHERE uid = "' . $this->escapeString($uid) . '") ORDER BY created DESC');
 		$counter = 0;
 		while($row = $result->fetchArray(SQLITE3_ASSOC))
 		{
 			$counter++;
 			$link = HOST . 'shortlink/r/' . $row['uid'];
+
+			$created = date('Y/d/m H:i',$row['created']);
+			if($request->currentLanguage == 'de') {
+				$created = date('d.m.Y H:i',$row['created']);
+			}
+
 			$node = $renderer->document->createFromHTML('
 				<tr>
 					<td><a class="shortlink" target="_blank" href="' . $link .'">'.$link.'</a> => <a class="reallink" target="_blank" href="' . $row['link'] .'">'.$row['link'].'</a></td>
 					<td>' . $row['counter'] .'</td>
-					<td>' . date('Y/d/m H:i',$row['created']) . '</td>
+					<td>' . $created . '</td>
 				</tr>
 			');
 			$linksContainer->appendChild($node);

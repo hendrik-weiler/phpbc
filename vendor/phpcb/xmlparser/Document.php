@@ -163,8 +163,6 @@ class Document
 							&& isset($_COOKIE[$cookieName])
 							&& $_COOKIE[$cookieName] == $declaration->getAttribute('lang')) {
 							$active = ' class="active" ';
-						} else {
-
 						}
 					}
 					$parser->lexer->insertText('<a 
