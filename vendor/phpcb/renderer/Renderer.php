@@ -288,6 +288,49 @@ class Renderer
 		}
 		$this->checkDeclarations();
 		$this->initComponents();
+		if(isset($_REQUEST['__action__'])) {
+			if($_REQUEST['__action__'] == 'langSwitch') {
+				if(isset($_REQUEST['redir'])) {
+					if(isset($_REQUEST['param'])) {
+
+						$translation_decl = null;
+						foreach($this->document->getDeclarations() as $declaration) {
+							if($declaration->name == 'translation') {
+								$translation_decl = $declaration;
+								break;
+							}
+						}
+
+						if(is_null($translation_decl)) {
+							print 'A "translation" declaration needs to be set.';
+							exit();
+						}
+
+						if(is_null($translation_decl->getAttribute('cookie-name'))) {
+							print 'The "translation" declaration needs a "cookie-name" attribute.';
+							exit();
+						}
+
+						$split = explode('?', $_SERVER['REQUEST_URI']);
+						$cookiePath = $split[0];
+						if(!is_null($translation_decl->getAttribute('cookie-path'))) {
+							$cookiePath = $translation_decl->getAttribute('cookie-path');
+						}
+
+						setcookie($translation_decl->getAttribute('cookie-name'), $_REQUEST['param'], time()+(3600*12),$cookiePath);
+
+						header('Location: ' . $_REQUEST['redir']);
+						exit();
+					} else {
+						print '"param" needs to be set.';
+						exit();
+					}
+				} else {
+					print '"redir" needs to be set.';
+					exit();
+				}
+			}
+		}
 		if($this->codeBehind) {
 			$request = new Request();
 			$response = new Response();

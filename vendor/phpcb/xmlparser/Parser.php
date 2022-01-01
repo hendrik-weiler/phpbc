@@ -137,11 +137,11 @@ class Parser
 	 * @memberOf Parser
 	 * @method eat
 	 */
-	public function eat($type) {
+	public function eat($type, $marker=0) {
 		if($this->current_token->type == $type) {
 			$this->current_token = $this->lexer->get_next_token();
 		} else {
-			$this->error();
+			$this->error('Trying to eat "' . $type . '" on "' . $this->current_token->type . '",' . $marker . '.');
 		}
 	}
 
@@ -156,7 +156,7 @@ class Parser
 	public function attribute() {
 		$key = $this->current_token->value;
 		$value = '';
-		$this->eat(Type::ID);
+		$this->eat(Type::ID,2);
 		if($this->current_token->type == Type::EQUAL) {
 			$this->eat(Type::EQUAL);
 			if($this->current_token->type == Type::SINGLE_QUOTE) {
@@ -196,7 +196,7 @@ class Parser
 
 		$name = $this->current_token->value;
 		$attributes = array();
-		$this->eat(Type::ID);
+		$this->eat(Type::ID,1);
 
 		while ($this->current_token->type != Type::DECLARATION_END) {
 
@@ -217,7 +217,6 @@ class Parser
 		}
 
 		$this->eat(Type::DECLARATION_END);
-
 	}
 
 	/**
@@ -233,7 +232,7 @@ class Parser
 	protected function node(&$children, $parent) {
 		$this->eat(Type::TAG_START);
 		$tagName = $this->current_token->value;
-		$this->eat(Type::ID);
+		$this->eat(Type::ID,3);
 		$attributes = array();
 		while ($this->current_token->type != Type::TAG_END
 			&& $this->current_token->type != Type::TAG_SLASH_END) {
@@ -285,6 +284,10 @@ class Parser
 					$this->eat(Type::DECLARATION_START);
 					$node->appendContent('{{__node__}}');
 					$this->declaration($node->children, $node);
+					if($this->current_token->type == Type::VALUE) {
+						$node->appendContent($this->current_token->value);
+						$this->eat(Type::VALUE);
+					}
 				}
 			}
 			$children[$node->id] = $node;

@@ -83,7 +83,9 @@ class Lexer
 
 	public function advance() {
 		$this->add();
-		$this->current_char = $this->text[$this->pos];
+		if($this->pos < strlen($this->text)) {
+			$this->current_char = $this->text[$this->pos];
+		}
 	}
 
 	/**

@@ -118,6 +118,16 @@ class Lexer
 	private $inDoubleQuotes = false;
 
 	/**
+	 * Returns if a root element was already entered
+	 *
+	 * @var $inRootTag
+	 * @type bool
+	 * @memberOf Lexer
+	 * @private
+	 */
+	private $inRootTag = false;
+
+	/**
 	 * The constructor
 	 *
 	 * @param string $text The text
@@ -128,7 +138,7 @@ class Lexer
 	{
 		$this->pos = 0;
 		$this->line = 1;
-		$this->linePos = 0;
+		$this->linePos = 1;
 		$this->text = $text;
 	}
 
@@ -168,8 +178,8 @@ class Lexer
 	 * @method insertTextAtPos
 	 */
 	public function insertTextAtPos($pos, $text) {
-		$begin = substr($this->text, 0, $pos+1);
-		$end = substr($this->text, $pos+1);
+		$begin = substr($this->text, 0, $pos+0);
+		$end = substr($this->text, $pos+0);
 		$this->text = $begin . $text . $end;
 	}
 
@@ -413,6 +423,7 @@ class Lexer
 			} else {
 				$this->addPos();
 				$this->inTag = true;
+				$this->inRootTag = true;
 				return new Token(Type::TAG_START, null);
 			}
 		}
@@ -423,7 +434,7 @@ class Lexer
 		}
 
 		if($this->current_char == "\n") {
-			$this->linePos = 0;
+			$this->linePos = 1;
 			$this->line += 1;
 			$this->addPos();
 			return $this->get_next_token();
@@ -448,7 +459,9 @@ class Lexer
 			if($this->peek() == '>') {
 				$this->addPos();
 				$this->addPos();
-				$this->inTag = false;
+				if($this->inRootTag) {
+					$this->afterTagEnd = true;
+				}
 				return new Token(Type::DECLARATION_END, null);
 			}
 		}

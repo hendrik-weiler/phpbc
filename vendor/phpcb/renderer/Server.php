@@ -228,7 +228,11 @@ class Server {
 				$head = $document->getElementsByTagName('head');
 				if(count($head) > 0) {
 					$script = $document->createElement('script');
-					$script->setContent('var __request_url = "{request_url}";');
+					$translationVar = 'var __translations = {}';
+					if(!empty($document->translations)) {
+						$translationVar = 'var __translations = ' . json_encode($document->translations);
+					}
+					$script->setContent('var __request_url = "{request_url}";' . $translationVar);
 					$head[0]->appendChild($script);
 					$script = $document->createElement('script');
 					$script->setAttribute('src', '/@/core/core.js');

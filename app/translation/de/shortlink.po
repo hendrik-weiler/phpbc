@@ -1,0 +1,59 @@
+msgctxt "login"
+msgid "Login"
+msgstr "Anmelden"
+
+msgctxt "login"
+msgid "Link shortener"
+msgstr "Link kürzer"
+
+msgctxt "login"
+msgid "Fill in an url and get a link back!"
+msgstr "Geben Sie eine URL an erhalten Sie einen gekürzten Link!"
+
+msgctxt "login"
+msgid "Create"
+msgstr "Erstellen"
+
+msgctxt "login"
+msgid "The url cannot be empty."
+msgstr "Die Url darf nicht leer sein."
+
+msgctxt "login"
+msgid "A valid url is needed."
+msgstr "Eine gültige Url ist erforderlich."
+
+msgctxt "login"
+msgid "Enter your url..."
+msgstr "Bitte geben Sie eine URL ein..."
+
+msgctxt "app"
+msgid "Add a new link"
+msgstr "Einen neuen Link hinzufügen"
+
+msgctxt "app"
+msgid "Add new link"
+msgstr "Neuen Link hinzufügen"
+
+msgctxt "app"
+msgid "Your links"
+msgstr "Ihre Links"
+
+msgctxt "app"
+msgid "With this link you can have an overview of all your links."
+msgstr "Mit diesem Link können Sie sich einen Überblick über alle Ihre Links verschaffen."
+
+msgctxt "app"
+msgid "Link"
+msgstr "Link"
+
+msgctxt "app"
+msgid "Visiter count"
+msgstr "Besuchszähler"
+
+msgctxt "app"
+msgid "Creation date"
+msgstr "Erstellungsdatum"
+
+msgctxt "app"
+msgid "All links"
+msgstr "Alle Links"

@@ -93,6 +93,15 @@ class Document
 	public $forms = array();
 
 	/**
+	 * Returns a map of translations
+	 *
+	 * @var $translations
+	 * @type array
+	 * @memberOf Document
+	 */
+	public $translations = array();
+
+	/**
 	 * @param $text string The xml to parse
 	 *
 	 * @constructor
@@ -130,6 +139,70 @@ class Document
 	 */
 	public function declarationCall(Declaration $declaration, $parser) {
 
+		if($declaration->name == 'langSwitch') {
+			if(!is_null($declaration->getAttribute('text'))) {
+				if(!is_null($declaration->getAttribute('lang'))) {
+					$parser->lexer->insertText('<a 
+						phpcb-action="langSwitch" 
+						phpcb-param="' . $declaration->getAttribute('lang') . '" href="#">' . $declaration->getAttribute('text') . '</a>');
+				} else {
+					$parser->error('The langSwitch declaration needs a lang attribute.');
+				}
+				$declaration->parentNode->removeChild($declaration);
+			} else {
+				$parser->error('The langSwitch declaration needs a text attribute.');
+			}
+		}
+		if($declaration->name == '__') {
+			if(!is_null($declaration->getAttribute('text'))) {
+				if(isset($this->translations[$declaration->getAttribute('text')])) {
+					$parser->lexer->insertText($this->translations[$declaration->getAttribute('text')]);
+				} else {
+					$parser->lexer->insertText($declaration->getAttribute('text'));
+				}
+				$declaration->parentNode->removeChild($declaration);
+			} else {
+				$parser->error('The __ declaration needs a text attribute.');
+			}
+		}
+		if($declaration->name == 'translation') {
+			if(!is_null($declaration->getAttribute('file'))) {
+				if(!is_null($declaration->getAttribute('default-lang'))) {
+
+					$lang = $declaration->getAttribute('default-lang');
+					if(isset($_GET['lang'])) {
+						$lang = $_GET['lang'];
+					}
+
+					if(!is_null($declaration->getAttribute('cookie-name'))
+						&& isset($_COOKIE[$declaration->getAttribute('cookie-name')])) {
+						$lang = $_COOKIE[$declaration->getAttribute('cookie-name')];
+					}
+
+					$path = APP_PATH . 'translation/' .
+						$lang . '/' .
+						$declaration->getAttribute('file');
+					if(file_exists($path)) {
+						require_once RENDERER_PATH . 'poparser/Document.php';
+						$text = file_get_contents($path);
+						$poDoc = new \poparser\Document($text);
+						if(!is_null($declaration->getAttribute('context'))) {
+							$translations = $poDoc->toMapContext($declaration->getAttribute('context'));
+							if(!is_null($translations)) {
+								$this->translations = $translations;
+							}
+						} else {
+							$this->translations = $poDoc->toMap();
+						}
+					}
+
+				} else {
+					$parser->error('The translation declaration needs the default-lang attribute.');
+				}
+			} else {
+				$parser->error('The translation declaration needs a file attribute.');
+			}
+		}
 		if($declaration->name == 'crsf-token') {
 			$token = time() . '-' . uniqid();
 			setcookie('crsf-token', $token, time()+(3600*12),$_SERVER['REQUEST_URI']);
@@ -149,7 +222,7 @@ class Document
 					$parser->error('Could not find page in "' . $pagePath . '"');
 				}
 			} else {
-				$parser->error('The include delcaration needs a page attribute.');
+				$parser->error('The include declaration needs a page attribute.');
 			}
 		}
 
@@ -370,6 +443,7 @@ class Document
 				}
 			}
 		}
+
 		$this->indexNodes($this->rootNode);
 		return $this->rootNode;
 	}
