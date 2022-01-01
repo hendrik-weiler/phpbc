@@ -9,6 +9,7 @@ Version: preview
 
 - css parser
 - xml parser
+- po file parser
 - renderer
 - shortlink generator example
 - simple twitter clone example
