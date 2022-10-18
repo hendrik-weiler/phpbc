@@ -110,7 +110,8 @@ class Renderer
 	 */
 	public static function runClass($className) {
 		if(class_exists($className)) {
-			$request = new Request();
+			$document = new Document('');
+			$request = new Request($document);
 			$response = new Response();
 			$codeBehind = new $className(null);
 			if($_SERVER['REQUEST_METHOD'] === 'POST') {
